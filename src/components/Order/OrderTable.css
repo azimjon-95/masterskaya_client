@@ -1,0 +1,588 @@
+/* ================= ORDER CARDS ================= */
+.orders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    border-radius: 16px;
+    background: #f8f9fa;
+    min-height: 100vh;
+}
+
+.spinner-icon {
+    animation: spin 1s linear infinite;
+    color: #ffffff;
+}
+
+.waiting-modal {
+    border-top: 5px solid #00ddff;
+}
+
+.waiting-confirm {
+    background: #00ddff;
+}
+
+.waiting-badge {
+    background: #00ddff33;
+    color: #0066ff;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.order-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 15px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
+    height: 245px;
+}
+
+.order-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-color: #3b82f6;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 7px;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+.customer-status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.status-deleteBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 4px;
+    color: #ef4444;
+    background: #fee2e200;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.status-deleteBtn[disabled] {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.status-deleteBtn:hover {
+    background: #54212100;
+    color: green;
+    transform: scale(1.1);
+}
+
+.customer-info h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 6px 0;
+    text-wrap: nowrap;
+}
+
+.phone-number {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+    font-weight: 500;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-progress {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-ready {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-collected {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-failed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-rowse {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px dashed #ddd;
+    font-size: 14px;
+}
+
+.info-rowse:last-child {
+    border-bottom: none;
+}
+
+.info-rowse .label {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.info-rowse .value {
+    font-size: 14px;
+    color: #1f2937;
+    font-weight: 600;
+    text-align: right;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 2px solid #f3f4f6;
+}
+
+.date-text {
+    font-size: 13px;
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+.details-btn {
+    background: #3b82f6;
+    color: #ffffff;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.details-btn[disabled] {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.details-btn:hover {
+    background: #2563eb;
+    transform: scale(1.05);
+}
+
+.details-btn.disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
+.details-btn.disabled:hover {
+    background: #9ca3af;
+    transform: none;
+}
+
+.no-orders {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #6b7280;
+    font-size: 18px;
+    font-weight: 600;
+    background: #f9fafb;
+    border-radius: 12px;
+}
+
+/* ================= TAYYOR MODAL ================= */
+.ready-modal {
+    max-width: 520px;
+    width: 90%;
+}
+
+.animated-modal {
+    animation: modalAppear 0.4s ease-out forwards;
+    transform: scale(0.9);
+    opacity: 0;
+}
+
+@keyframes modalAppear {
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-body-content {
+    padding: 10px 0;
+}
+
+.modal-subtitle {
+    text-align: center;
+    color: #374151;
+    margin-bottom: 15px;
+    font-size: 15px;
+}
+
+.form-group_modal {
+    margin-bottom: 20px;
+}
+
+.form-group_modal label {
+    display: block;
+    margin-bottom: 2px;
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.form-group_modal textarea,
+.form-group_modal input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border 0.2s;
+}
+
+/* Xususan number input uchun spinnerlarni o'chirish */
+.form-group_modal input[type="number"] {
+    -moz-appearance: textfield;
+    /* Firefox uchun */
+    appearance: textfield;
+    /* Boshqa brauzerlar uchun */
+}
+
+.order-card {
+    position: relative;
+    /* Tooltip uchun muhim */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.order-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Tooltip stil */
+.waiting-tooltip {
+    position: absolute;
+    top: -50px !important;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #1e40af;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease, top 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+    /* tooltip ustiga bosilmasin */
+}
+
+.waiting-tooltip .tooltip-arrow {
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #1e40af;
+}
+
+.order-card:hover .waiting-tooltip {
+    opacity: 1;
+    visibility: visible;
+    top: -26px;
+    /* biroz yuqoriga chiqsin animatsiya bilan */
+}
+
+
+
+/* Qo'shimcha: WebKit brauzerlarida (::webkit-inner-spin-button, ::webkit-outer-spin-button) */
+.form-group_modal input[type="number"]::-webkit-inner-spin-button,
+.form-group_modal input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.form-group_modal textarea:focus,
+.form-group_modal input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.waiting-badge {
+    color: #3b82f6;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 16px;
+    background: #3b83f627;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+}
+
+/* ================= DELETE POPOVER ================= */
+.delete-popover {
+    position: absolute;
+    top: 30px;
+    right: 0;
+    z-index: 100;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 16px;
+    width: 260px;
+    animation: fadeIn 0.2s ease;
+}
+
+.popover-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+}
+
+.popover-content p {
+    font-size: 14px;
+    color: #374151;
+    margin: 0;
+}
+
+.popover-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.cancel-btn {
+    padding: 8px 16px;
+    background: #f3f4f6;
+    color: #4b5563;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.cancel-btn:hover {
+    background: #e5e7eb;
+}
+
+.confirm-btn {
+    padding: 8px 16px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.confirm-btn:hover {
+    background: #dc2626;
+}
+
+.failed-modal .modal-top h2 {
+    color: #dc2626;
+}
+
+.failed-modal textarea {
+    border: 1px solid #fca5a5;
+}
+
+.confirm-btn.failed-confirm {
+    background: #dc2626;
+}
+
+.confirm-btn.failed-confirm:hover {
+    background: #b91c1c;
+}
+
+.ready-modal .modal-top h2 {
+    color: #16a34a;
+}
+
+.confirm-btn {
+    background: #16a34a;
+}
+
+.total-cost {
+    color: #16a34a;
+    font-weight: 600;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.section-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-btn {
+    background: #e8e8e8;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.edit-btn:hover {
+    background: #dcdcdc;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1024px) {
+    .orders-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 450px));
+        padding: 16px;
+        gap: 18px;
+    }
+}
+
+@media (max-width: 768px) {
+    .orders-grid {
+        grid-template-columns: 1fr;
+        /* Mobil uchun bitta ustun */
+        padding: 0px !important;
+        gap: 16px;
+        margin-top: 10px;
+    }
+
+    .order-card {
+        /* height: auto; */
+        /* Mobil uchun moslashuvchan balandlik */
+        height: 224px !important;
+        padding: 20px;
+    }
+
+
+    .customer-status {
+        align-items: flex-start;
+        /* width: 100%; */
+    }
+
+    .total-cost {
+        margin-top: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .orders-grid {
+        padding: 8px;
+        gap: 14px;
+    }
+
+    .order-card {
+        padding: 16px;
+    }
+
+    .card-header {
+        gap: 8px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+
+    .info-rowse {
+        /* flex-direction: column; */
+        align-items: flex-start;
+        gap: 4px;
+        padding: 2px 0;
+    }
+
+    .info-rowse .value {
+        text-align: left;
+    }
+
+    .card-footer {
+        /* flex-direction: column; */
+        align-items: flex-end;
+        gap: 10px;
+    }
+
+    .details-btn {
+        /* width: 100%; */
+        text-align: center;
+    }
+
+    .card-footer>span.date-text {
+        align-self: flex-start;
+    }
+}

@@ -1,0 +1,405 @@
+/* admin.css */
+
+/* Container */
+.tfu-admin-container {
+    padding: 1rem;
+    width: 100%;
+    margin: 0 auto;
+    background-color: white;
+    height: calc(100vh - 80px);
+}
+
+/* Header */
+.tfu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+.tfu-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+/* Buttons */
+.tfu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+}
+
+.tfu-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.tfu-btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8rem;
+}
+
+.tfu-btn-primary {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.tfu-btn-primary:hover {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+}
+
+.tfu-btn-edit {
+    background-color: #10b981;
+    color: white;
+}
+
+.tfu-btn-edit:hover {
+    background-color: #059669;
+}
+
+.tfu-btn-delete {
+    background-color: #ef4444;
+    color: white;
+}
+
+.tfu-btn-delete:hover {
+    background-color: #dc2626;
+}
+
+.tfu-btn-success {
+    background-color: #22c55e;
+    color: white;
+}
+
+.tfu-btn-success:hover {
+    background-color: #16a34a;
+}
+
+.tfu-btn-cancel {
+    background-color: #6b7280;
+    color: white;
+}
+
+.tfu-btn-cancel:hover {
+    background-color: #4b5563;
+}
+
+/* Table */
+.tfu-table-wrapper {
+    background: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.tfu-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tfu-table th {
+    background-color: #f9fafb;
+    color: #374151;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.875rem;
+}
+
+.tfu-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f3f4f6;
+    color: #1f2937;
+    font-size: 0.875rem;
+}
+
+.tfu-table tr:hover {
+    background-color: #f9fafb;
+}
+
+.tfu-table tr:last-child td {
+    border-bottom: none;
+}
+
+.tfu-username {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.tfu-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tfu-empty {
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+    padding: 2rem;
+}
+
+/* Loading and Error States */
+.tfu-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 3rem;
+    color: #6b7280;
+}
+
+.tfu-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.tfu-error-banner {
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.tfu-error-banner p {
+    margin: 0;
+    color: #dc2626;
+    font-size: 0.875rem;
+}
+
+.tfu-error-message {
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    color: #dc2626;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+/* Modal */
+.tfu-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.tfu-modal {
+    background: white;
+    border-radius: 0.5rem;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.tfu-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.tfu-modal-header h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.tfu-modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6b7280;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s;
+}
+
+.tfu-modal-close:hover {
+    background-color: #f3f4f6;
+    color: #1f2937;
+}
+
+/* Form */
+.tfu-form {
+    padding: 1.5rem;
+}
+
+.tfu-form-group {
+    margin-bottom: 1.25rem;
+}
+
+.tfu-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.tfu-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    color: #1f2937;
+    background-color: white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.tfu-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.tfu-input-error {
+    border-color: #ef4444;
+}
+
+.tfu-input-error:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.tfu-error {
+    display: block;
+    color: #ef4444;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.tfu-form-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .tfu-admin-container {
+        padding: 0.75rem;
+    }
+
+    .tfu-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .tfu-title {
+        text-align: center;
+        font-size: 1.25rem;
+    }
+
+    .tfu-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .tfu-table {
+        min-width: 600px;
+    }
+
+    .tfu-modal {
+        margin: 0.5rem;
+        max-width: calc(100vw - 1rem);
+    }
+
+    .tfu-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .tfu-btn {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .tfu-admin-container {
+        padding: 0.5rem;
+    }
+
+    .tfu-form {
+        padding: 1rem;
+    }
+
+    .tfu-modal-header {
+        padding: 1rem;
+    }
+
+    .tfu-table th,
+    .tfu-table td {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .tfu-actions {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .tfu-error-banner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .tfu-loading {
+        padding: 2rem;
+    }
+
+    .tfu-btn-sm {
+        padding: 0.5rem;
+        font-size: 0.75rem;
+    }
+}

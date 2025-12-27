@@ -1,0 +1,231 @@
+.header {
+    padding: 7px 0rem;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* position: relative; */
+    z-index: 10;
+    position: sticky !important;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.mainHeader {
+    max-width: 1360px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.dollarRate {
+    font-size: 0.95rem;
+    color: #242424;
+}
+
+.dollarRate p {
+    margin: 0;
+}
+
+.dollar-toggle {
+    font-weight: bold;
+    color: #0066cc;
+    font-size: 12px;
+}
+
+.mainHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    background: #fff;
+}
+
+.diagnostic-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #1f74ff;
+    border: none;
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s linear;
+}
+
+.logo-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.diagnostic-btn:hover {
+    background: #155bcc;
+    transform: scale(1.05);
+    color: #ffffff;
+}
+
+.user-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    color: #0066cc;
+    cursor: pointer;
+    padding: 8px 2px;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.user-btn:hover {
+    background: #f0f0f0;
+}
+
+/* Sidebar styles */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+    z-index: 998;
+}
+
+.sidebar-overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.user-sidebar {
+    position: fixed;
+    top: 0;
+    right: -350px;
+    width: 280px;
+    height: 100vh;
+    /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+    background: linear-gradient(135deg, #0fb8ad 0%, #1fc8db 40%, #2cb5e8 100%);
+    color: white;
+    z-index: 999;
+    transition: right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.user-sidebar.open {
+    right: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .7rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.user-info {
+    text-align: center;
+    padding: 1rem 1rem;
+}
+
+.avatar-placeholder {
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.user-info h4 {
+    margin: 0.5rem 0;
+    font-size: 1.3rem;
+}
+
+.user-info p {
+    margin: 0.4rem 0;
+    opacity: 0.9;
+}
+
+.sidebar-menu {
+    flex: 1;
+    padding: 1rem;
+}
+
+.sidebar-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-item {
+    padding: 1rem 1.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(10px);
+}
+
+.menu-item.active {
+    background: rgba(255, 255, 255, 0.25);
+    font-weight: bold;
+}
+
+.sidebar-footer {
+    padding: .5rem 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.logout-sidebar-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.logout-sidebar-btn:hover {
+    background: rgba(255, 0, 0, 0.4);
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+    .header {
+        padding: 2px 10px;
+        background: #fff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 10;
+    }
+
+    .dollarRate {
+        font-size: 0.80rem;
+        color: #333;
+        margin-top: 3px;
+    }
+}

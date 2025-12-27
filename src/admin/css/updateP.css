@@ -1,0 +1,46 @@
+.update-product-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: white;
+  z-index: 1000;
+  width: 100%;
+  padding: 20px;
+  color: #000;
+}
+.update-product-container .close-icon {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.update-product-container input,
+.update-product-container textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  padding: 7px;
+}
+
+.update-product-container textarea {
+  height: 200px;
+}
+
+.update-product-container h3 {
+  margin-top: 20px;
+  background-color: rgb(154, 194, 235);
+  padding: 5px;
+}
+
+.update-product-container button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

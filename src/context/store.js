@@ -1,0 +1,14 @@
+
+import { configureStore } from "@reduxjs/toolkit";
+import searchSlice from "./actions/authSearch";
+
+import { api } from "./api";
+
+export const store = configureStore({
+    reducer: {
+        [api.reducerPath]: api.reducer,
+        search: searchSlice,
+    },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(api.middleware),
+});

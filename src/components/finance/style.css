@@ -1,0 +1,450 @@
+.finance-container {
+    padding: 16px;
+    max-width: 1400px;
+    margin: 0 auto;
+    background-color: #f8fafc;
+    min-height: calc(100vh - 80px);
+}
+
+/* Umumiy statistika kartalari */
+.finance-stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    /* flex-wrap: wrap; */
+}
+
+.stat-card_finance {
+    flex: 1;
+    min-width: 180px;
+    padding: 16px;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    text-align: center;
+}
+
+.stat-card_finance h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.stat-card_finance p {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.stat-card_finance.income {
+    border-left: 4px solid #137333;
+}
+
+.stat-card_finance.expense {
+    border-left: 4px solid #d32f2f;
+}
+
+.stat-card_finance.balance {
+    border-left: 4px solid #1976d2;
+}
+
+/* Ikki qismli kontent (forma + jadval) */
+.finance-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Bo'lim sarlavhalari */
+.section-header_finance {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.section-header_finance h2 {
+    font-size: 18px;
+    margin: 0;
+    color: #333;
+}
+
+.add-trans-btn {
+    background: #1976d2;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+/* Kirim/Chiqim formasi */
+.transaction-form_finance {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: white;
+    padding: 18px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.transaction-form_finance input,
+.transaction-form_finance select {
+    padding: 11px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.submit-btn_finance {
+    background: #137333;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+/* Qidiruv maydoni */
+.search-bar {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px 10px 10px 36px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.search-bar svg {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    /* Mobil uchun kichikroq shrift */
+}
+
+.transactions-table th {
+    background: #f1f5f9;
+    padding: 10px 8px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.transactions-table td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+
+.type-badge {
+    padding: 4px 8px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.type-badge.income {
+    background: #e6f4ea;
+    color: #137333;
+}
+
+.type-badge.expense {
+    background: #fce8e6;
+    color: #d32f2f;
+}
+
+.fin_actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.action-btn.edit {
+    color: #1976d2;
+}
+
+.action-btn.delete {
+    color: #d32f2f;
+}
+
+.transaction-form_finance select {
+    width: 100%;
+    padding: 12px;
+    /* margin-bottom: 12px; */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: white;
+}
+
+.transaction-form_finance select:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* ================================================================== */
+/* MOBILE OPTIMALLASHTIRISH */
+/* ================================================================== */
+
+@media (max-width: 1024px) {
+    .finance-content {
+        grid-template-columns: 1fr;
+        /* Planshet va kichikroq ekranlarda vertikal */
+    }
+
+    .search-bar {
+        max-width: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .finance-container {
+        padding: 0px;
+    }
+
+    .finance-stats {
+        overflow-y: hidden;
+        overflow-x: auto;
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+
+    .stat-card_finance {
+        min-width: auto;
+        padding: 9px 22px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-wrap: nowrap;
+        gap: 2px;
+    }
+
+    .stat-card_finance h3 {
+        font-size: 12px;
+        margin-bottom: 0px;
+        color: #555;
+    }
+
+    .stat-card_finance p {
+        font-size: 14px;
+        font-weight: bold;
+        margin: 0;
+    }
+
+
+    .section-header_finance {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .section-header_finance h2 {
+        font-size: 17px;
+    }
+
+    .add-trans-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 10px;
+        font-size: 15px;
+    }
+
+    .transaction-form_finance {
+        padding: 10px;
+    }
+
+    .transaction-form_finance input,
+    .transaction-form_finance select {
+        font-size: 15px;
+        padding: 10px;
+    }
+
+    .transactions-table {
+        font-size: 12.5px;
+
+    }
+
+    .transactions-table th,
+    .transactions-table td {
+        padding: 5px 6px;
+    }
+
+    /* Juda kichik ekranlarda ba'zi ustunlarni yashirish mumkin (ixtiyoriy) */
+    .transactions-table th:nth-child(1),
+    .transactions-table td:nth-child(1) {
+        min-width: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+
+
+    .section-header_finance h2 {
+        font-size: 16px;
+    }
+
+    .transactions-table th,
+    .transactions-table td {
+        padding: 3px 4px;
+        font-size: 12px;
+    }
+
+    .type-badge {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+
+    .fin_actions svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+.finance-table-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Jadval wrapper */
+.table-wrapper {
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    /* max-height: 100vh; */
+    /* overflow-x: auto; */
+}
+
+/* Horizontal scroll uchun yangi container */
+.table-scroll-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    /* iOS da silliq scroll */
+    width: 100%;
+}
+
+/* Jadvalni minimal kenglik bilan cheklash */
+.transactions-table {
+    width: 100%;
+    min-width: 600px;
+    /* Mobil uchun scroll paydo bo'lishi uchun */
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.transactions-table th {
+    background: #f1f5f9;
+    padding: 10px 8px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    white-space: nowrap;
+}
+
+.transactions-table td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+/* Mobil uchun qo‘shimcha optimallashtirish */
+@media (max-width: 768px) {
+    .transactions-table {
+        min-width: 650px;
+        font-size: 12.5px;
+    }
+
+    .transactions-table th,
+    .transactions-table td {
+        padding: 6px 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .table-wrapper {
+        border-radius: 8px;
+        margin: 0 -4px;
+        padding: 0 4px;
+    }
+
+    .table-scroll-container {
+        padding-bottom: 8px;
+    }
+
+    .transactions-table {
+        min-width: 700px;
+        font-size: 12px;
+    }
+
+    .transactions-table th,
+    .transactions-table td {
+        padding: 5px 5px;
+        font-size: 12px;
+    }
+
+    .type-badge {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+
+    .fin_actions svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    /* Scroll ko‘rsatkichi (ixtiyoriy – chiroyli ko‘rinish uchun) */
+    .table-scroll-container::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .table-scroll-container::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+    }
+}

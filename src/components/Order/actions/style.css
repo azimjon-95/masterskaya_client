@@ -1,0 +1,193 @@
+/* style.css ga qo'shimcha yoki o'zgartirish */
+
+.order-call-action {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.order-call {
+    position: relative;
+}
+
+.call-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-weight: 500;
+    margin-left: auto;
+    border: none;
+    cursor: pointer;
+}
+
+.call-btn.tg {
+    background-color: #10b981;
+    /* Telegram ko'k */
+    color: white;
+    /* margin-left: 1px; */
+    gap: 8px;
+    padding: 1.4px 8px !important;
+}
+
+.call-btn.tg:hover {
+    background-color: #1c7bb0;
+}
+
+.call-btn.tg span {
+    font-size: 14px;
+}
+
+/* Modal stillari (yaxshilandi) */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 520px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3 {
+    margin: 0 0 16px 0;
+    font-size: 20px;
+}
+
+.modal-content p {
+    margin: 8px 0;
+    color: #444;
+}
+
+.modal-content textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    margin: 12px 0 20px;
+    resize: vertical;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.send-btn {
+    background-color: #229ed9;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.send-btn:hover {
+    background-color: #1c7bb0;
+}
+
+.cancel-btn {
+    background-color: #e5e7eb;
+    color: #374151;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.success {
+    color: #10b981;
+    margin-top: 12px;
+    font-weight: 500;
+}
+
+.error {
+    color: #ef4444;
+    margin-top: 12px;
+    font-weight: 500;
+}
+
+/* === Animation === */
+.modal-overlay {
+    animation: fadeIn .25s ease forwards;
+}
+
+.modal-content {
+    animation: scaleIn .25s ease forwards;
+}
+
+/* Hoverni o'chirish (modalga kirib chiqishda hech narsa bo'lmaydi) */
+.modal-content:hover,
+.modal-overlay:hover {
+    transform: none;
+    opacity: 1;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        /* transform: scale(0.92); */
+        opacity: 0;
+    }
+
+    to {
+        /* transform: scale(1); */
+        opacity: 1;
+    }
+}
+
+@keyframes scaleOut {
+    from {
+        /* transform: scale(1); */
+        opacity: 1;
+    }
+
+    to {
+        /* transform: scale(0.92); */
+        opacity: 0;
+    }
+}

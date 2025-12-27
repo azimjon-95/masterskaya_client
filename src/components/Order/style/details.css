@@ -1,0 +1,282 @@
+/* ================= ORDER DETAILS MODAL STYLES ================= */
+
+/* Modal overlay va asosiy quti */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-box {
+    background: #fff;
+    width: 90%;
+    max-width: 1000px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+/* Modal sarlavha */
+.modal-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 12px;
+    position: relative;
+}
+
+.modal-top h2 {
+    flex: 1;
+    font-size: 20px;
+}
+
+/* Yopish tugmalari */
+.close-btn {
+    position: absolute;
+    top: -20px;
+    right: -15px;
+    background: transparent;
+    color: #ef4444;
+    border: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-weight: 700;
+}
+
+.close-btn:hover {
+    transform: rotate(90deg);
+}
+
+.close-btn-modal {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background: #ef4444;
+    color: #ffffff;
+    border: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-weight: 700;
+}
+
+.close-btn-modal:hover {
+    background: #dc2626;
+    transform: rotate(90deg);
+}
+
+/* Ichki bo‘limlar grid */
+.modal-sections {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+}
+
+/* Har bir bo‘lim kartochkasi */
+.info-card {
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 14px;
+    border: 1px solid #eee;
+}
+
+.info-card.full {
+    grid-column: span 2;
+}
+
+.info-card h3 {
+    font-size: 16px;
+}
+
+/* Bo‘lim sarlavhasi va tahrirlash tugmasi */
+.section-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.edit-btn {
+    background: #e8e8e8;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.edit-btn:hover {
+    background: #dcdcdc;
+}
+
+/* Ma'lumot qatori */
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.info-row span {
+    color: #666;
+    font-weight: 500;
+}
+
+.info-row strong {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+/* Tahrirlash inputlari */
+.edit-input {
+    width: 60%;
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.edit-input-textarea {
+    width: 60%;
+    min-height: 60px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding: 6px;
+    resize: vertical;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+/* OK va Cancel tugmalari */
+.edit-actions button {
+    margin-left: 6px;
+    padding: 3px 9px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.ok {
+    background: #4caf50;
+    color: white;
+}
+
+.cancel {
+    background: #f44336;
+    color: white;
+}
+
+/* Rasmlar qatori */
+.image-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    grid-column: span 2;
+}
+
+.image-row img {
+    width: 160px;
+    height: auto;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    object-fit: cover;
+}
+
+/* Status badge (modal ichida ishlatilgan) */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Ranglar statusga qarab (agar kerak bo‘lsa) */
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-progress {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-ready {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-collected {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-failed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Responsive (modal uchun) */
+@media (max-width: 768px) {
+    .modal-sections {
+        grid-template-columns: 1fr;
+    }
+
+    .info-card.full,
+    .image-row {
+        grid-column: span 1;
+    }
+
+    .edit-input,
+    .edit-input-textarea {
+        width: 100%;
+    }
+
+    .info-row {
+        /* flex-direction: column; */
+        align-items: flex-start;
+        /* gap: 4px; */
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-box {
+        width: 95%;
+        padding: 16px;
+    }
+
+    .image-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .image-row img {
+        width: 100%;
+        max-width: 300px;
+    }
+}

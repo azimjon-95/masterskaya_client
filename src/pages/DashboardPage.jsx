@@ -7,6 +7,10 @@ import PartsWarehouse from '../components/partsWarehouse/PartsWarehouse';
 import AddOrderModal from '../components/addOrder/AddOrderModal';
 import { Clock, Wrench, CheckCircle, Boxes, CircleOff } from 'lucide-react';
 import { translations } from '../translations';
+import { HiOutlineWrenchScrewdriver } from "react-icons/hi2";
+import {
+    useGetWaitingOrdersQuery
+} from '../context/orderApi';
 import { useGetOrdersQuery } from '../context/orderApi';
 import './style/DashboardPage.css'
 import FinancePage from '../components/finance/Finance';
@@ -20,13 +24,24 @@ export default function DashboardPage({ username, lang, setLang, onLogout }) {
     const currentYear = today.getFullYear();
     const currentMonth = String(today.getMonth() + 1).padStart(2, '0');
     const [selectedMonth, setSelectedMonth] = useState(`${currentYear}.${currentMonth}`);
-
+    const [showToast, setShowToast] = useState(false);
+    const { data: waitingOrders = [] } = useGetWaitingOrdersQuery();
     const t = translations[lang];
+    const waitingOrdersList = waitingOrders?.innerData || [];
 
     const uzMonths = [
         "Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun",
         "Iyul", "Avgust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"
     ];
+
+    const handleClick = () => {
+        setShowToast(true);
+
+        // 3 sekunddan so‘ng avtomatik yo‘qoladi
+        setTimeout(() => {
+            setShowToast(false);
+        }, 3000);
+    };
 
     // RTK Query orqali ma'lumot olish
     const { data, isLoading, refetch } = useGetOrdersQuery(
@@ -180,6 +195,34 @@ export default function DashboardPage({ username, lang, setLang, onLogout }) {
                 )}
 
             </main>
+            {waitingOrdersList?.length > 0 &&
+                <button onClick={handleClick} className="btn-toast">
+                    <HiOutlineWrenchScrewdriver size={22} />
+                </button>
+            }
+
+            {showToast && (
+                <div className="toast">
+                    <h4 className="toast-title">🔧 Kutilyotgan ehtiyot qisimlar</h4>
+
+                    <div className="toast-list">
+                        {waitingOrdersList?.map((order, index) => (
+                            <div key={index} className="toast-item">
+                                <div className="top-row">
+                                    <span className="toast-model">{order.phoneModel}</span>
+
+                                </div>
+
+                                <div className="bottom-row">
+                                    <span className="reason">{order.waiting.reason}</span>
+                                    <span className="date">⏳ {new Date(order.waiting.waitingSince).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }

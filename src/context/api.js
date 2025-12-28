@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 
 // Bazaviy query — token bilan avtomatik headerga qo‘shiladi
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api/v1", // yoki sizning server manzilingiz
+  baseUrl: "https://masterskaya-api.medme.uz/api/v1", // yoki sizning server manzilingiz
   prepareHeaders: (headers) => {
     const token = localStorage.getItem("token");
     if (token) {

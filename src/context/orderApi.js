@@ -83,6 +83,12 @@ export const orderApi = api.injectEndpoints({
           body
         }),
       invalidatesTags: ["Orders"],
+    }),
+
+    // get("/waiting-orders"
+    getWaitingOrders: builder.query({
+      query: () => "/waiting-orders",
+      providesTags: ["Orders"],
     })
   }),
   overrideExisting: false,
@@ -95,5 +101,6 @@ export const {
   useUpdateOrderMutation,
   useDeleteOrderMutation,
   useUpdateStatusMutation,
-  useUpdateWaitingMutation
+  useUpdateWaitingMutation,
+  useGetWaitingOrdersQuery
 } = orderApi;

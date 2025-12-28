@@ -12,7 +12,7 @@ export async function syncOrdersToServer() {
         }
 
         try {
-            await fetch("http://localhost:5000/api/v1/orders", {
+            await fetch("https://masterskaya-api.medme.uz/api/v1/orders", {
                 method: "POST",
                 body: formData,
             });

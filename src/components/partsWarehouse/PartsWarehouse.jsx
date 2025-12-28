@@ -6,6 +6,7 @@ import {
     useUpdatePartMutation,
     useDeletePartMutation
 } from '../../context/materialsApi';
+
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { GiShoppingCart } from "react-icons/gi";
 import './style.css';
@@ -27,7 +28,6 @@ const PartsWarehouse = () => {
     const [updatePart, { isLoading: isUpdating }] = useUpdatePartMutation();
     const [deletePart] = useDeletePartMutation();
     const { showNotification } = useNotification();
-    // Yangi state'lar modal uchun
     const [showSellModal, setShowSellModal] = useState(false);
     const [selectedPart, setSelectedPart] = useState(null);
     const [dollarRate, setDollarRate] = useState(12500);
@@ -53,8 +53,6 @@ const PartsWarehouse = () => {
         type: 'Extiyot qismlar',
     });
 
-    console.log(editingPart);
-
 
     useEffect(() => {
         fetch("https://api.exchangerate-api.com/v4/latest/USD")
@@ -73,7 +71,6 @@ const PartsWarehouse = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
 
         if (!formData.name.trim() || !formData.brand.trim() || !formData.model.trim() || !formData.buyPrice || !formData.sellPrice || !formData.quantity) {
             showNotification("Barcha maydonlarni to'g'ri to'ldiring!", "error");
@@ -571,59 +568,61 @@ const PartsWarehouse = () => {
                                     ))}</div>
                             ) : (
                                 // Jadval ko'rinishi
-                                <table className="parts-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Turi</th>
-                                            <th>Nomi</th>
-                                            <th>Brend • Model</th>
-                                            <th>Rang</th>
-                                            <th>Razmer</th>
-                                            <th>Miqdor</th>
-                                            <th>Sotib olish</th>
-                                            <th>Sotish</th>
-                                            <th>Foyda</th>
-                                            <th>Sotish</th>
-                                            <th>Amallar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {filteredParts.map((part) => (
-                                            <tr key={part._id}>
-                                                <td>{part.type}</td>
-                                                <td><strong>{part.name}</strong></td>
-                                                <td>{part.brand} • {part.model}</td>
-                                                <td>{part.color || '-'}</td>
-                                                <td>{part.size || '-'}</td>
-                                                <td>
-                                                    <span className={`Tbbdg ${part.quantity > 0 ? 'bdgs' : 'bdgd'}`}>
-                                                        {part.quantity} dona
-                                                    </span>
-                                                </td>
-                                                <td>{formatPrice(part.buyPrice, part.currency)}</td>
-                                                <td>{formatPrice(part.sellPrice, part.currency)}</td>
-                                                <td>+{calculateProfit(part).toLocaleString()} so'm</td>
-                                                <td>
-                                                    <button className="bayproduct"
-                                                        onClick={() => handleSellClick(part)}
-                                                        title="Sotish"
-                                                        disabled={part.quantity === 0}
-                                                    >
-                                                        <GiShoppingCart />
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <button onClick={() => handleEdit(part)} className="btn-wer btne" title="Tahrirlash">
-                                                        <FaEdit />
-                                                    </button>
-                                                    <button onClick={() => handleDelete(part._id)} className="btn-wer btnd" title="O'chirish">
-                                                        <FaTrash />
-                                                    </button>
-                                                </td>
+                                <div className="parts-tableBox">
+                                    <table className="parts-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Turi</th>
+                                                <th>Nomi</th>
+                                                <th>Brend • Model</th>
+                                                <th>Rang</th>
+                                                <th>Razmer</th>
+                                                <th>Miqdor</th>
+                                                <th>Sotib olish</th>
+                                                <th>Sotish</th>
+                                                <th>Foyda</th>
+                                                <th>Sotish</th>
+                                                <th>Amallar</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {filteredParts.map((part) => (
+                                                <tr key={part._id}>
+                                                    <td>{part.type}</td>
+                                                    <td><strong>{part.name}</strong></td>
+                                                    <td>{part.brand} • {part.model}</td>
+                                                    <td>{part.color || '-'}</td>
+                                                    <td>{part.size || '-'}</td>
+                                                    <td>
+                                                        <span className={`Tbbdg ${part.quantity > 0 ? 'bdgs' : 'bdgd'}`}>
+                                                            {part.quantity} dona
+                                                        </span>
+                                                    </td>
+                                                    <td>{formatPrice(part.buyPrice, part.currency)}</td>
+                                                    <td>{formatPrice(part.sellPrice, part.currency)}</td>
+                                                    <td>+{calculateProfit(part).toLocaleString()} so'm</td>
+                                                    <td>
+                                                        <button className="bayproduct"
+                                                            onClick={() => handleSellClick(part)}
+                                                            title="Sotish"
+                                                            disabled={part.quantity === 0}
+                                                        >
+                                                            <GiShoppingCart />
+                                                        </button>
+                                                    </td>
+                                                    <td>
+                                                        <button onClick={() => handleEdit(part)} className="btn-wer btne" title="Tahrirlash">
+                                                            <FaEdit />
+                                                        </button>
+                                                        <button onClick={() => handleDelete(part._id)} className="btn-wer btnd" title="O'chirish">
+                                                            <FaTrash />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             )}
                         </>
                         :

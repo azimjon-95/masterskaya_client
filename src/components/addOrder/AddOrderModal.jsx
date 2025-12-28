@@ -406,7 +406,7 @@ export default function AddOrderModal({ t, onClose, refreshOrders }) {
                         >
                             <option value="">Tanlang</option>
                             {brends?.map((brand, inx) => (
-                                <option key={inx} value={brand}>{brand}</option>
+                                <option key={inx} value={brand?.value}>{brand?.label}</option>
                             ))}
                             <option value="Boshqa">Boshqa</option>
                         </select>

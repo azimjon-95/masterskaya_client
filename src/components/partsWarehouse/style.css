@@ -397,7 +397,6 @@
 }
 
 
-
 .crdact {
   display: flex;
   /* gap: 8px; */
@@ -480,9 +479,7 @@
     justify-content: space-between;
   }
 
-  .ctr {
-    padding: 16px;
-  }
+
 
   .srch {
     flex-direction: column;
@@ -522,6 +519,50 @@
 }
 
 @media (max-width: 480px) {
+  .srch {
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .parts-tableBox {
+    width: 100%;
+    height: calc(100vh - 230px);
+    overflow-x: auto;
+    overflow-y: auto;
+  }
+
+  .srch .inp {
+    min-width: 50% !important;
+  }
+
+  .inp {
+    min-width: 110px !important;
+  }
+
+  .srch select {
+    width: 100% !important;
+    min-width: 100px !important;
+  }
+
+  .css-13cymwt-control {
+    min-width: 150px !important;
+  }
+
+
+  /* 3 va 4 button — ikkinchi qator */
+  .srch .btnp:nth-child(3),
+  .srch .btnp:nth-child(4) {
+    flex: 1 1 calc(50% - 10px);
+    /* yonma-yon bo'ladi */
+  }
+
+  /* 5 button eng pastda */
+  .srch .btnp:nth-child(5) {
+    flex: 1 1 100%;
+  }
+
   .ttl {
     font-size: 18px;
   }

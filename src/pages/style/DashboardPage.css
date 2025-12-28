@@ -10,6 +10,152 @@
     padding: 40px 30px;
 }
 
+.btn-toast {
+    padding: 10px 12px;
+    font-size: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    background: #ffea00;
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    box-shadow: 0 0 10px rgba(255, 234, 0, 0.8);
+    animation: pulse 1.4s infinite alternate, shake 0.6s infinite alternate;
+}
+
+.btn-toast:hover {
+    animation: none;
+    transform: scale(1.15);
+    box-shadow: 0 0 15px rgb(95, 87, 7);
+}
+
+/* Yurak urishi kabi puls qiladi */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 6px #423c00cc;
+    }
+
+    100% {
+        transform: scale(1.15);
+        box-shadow: 0 0 15px rgb(95, 87, 7);
+    }
+}
+
+/* Yengil qimirlash effekti */
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(4px);
+    }
+}
+
+.toast {
+    position: fixed;
+    bottom: 85px;
+    right: 25px;
+    background: #222;
+    color: #fff;
+    padding: 10px 18px;
+    z-index: 1000;
+    border-radius: 6px;
+    font-size: 14px;
+    animation: slideUp 0.4s ease, shake 0.6s infinite alternate;
+}
+
+.toast-title {
+    font-size: 14px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* List scroll bo‘lsin lekin kichik o'lchamda ham joylashadi */
+.toast-list {
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+/* Har order mini-card bo‘lib chiqadi */
+.toast-item {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 6px;
+    margin-bottom: 6px;
+    transition: .3s;
+}
+
+.toast-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.02);
+}
+
+/* Yuqori qator */
+.top-row {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+/* Pastki qator */
+.bottom-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    opacity: .9;
+}
+
+/* Model uzun bo‘lsa sig‘adi */
+.toast-model {
+    /* max-width: 60%; */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.reason {
+    color: #ffdb4d;
+    font-size: 12px !important;
+}
+
+/* Scroll bantini nozik qilish */
+.toast-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.toast-list::-webkit-scrollbar-thumb {
+    background: #ffdb4d;
+    border-radius: 10px;
+}
+
+/* Pastdan chiqib keladi */
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Qimirlab turuvchi animatsiya */
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(4px);
+    }
+}
+
 /* Stats Grid - Kartochkalar */
 .stats-grid {
     display: flex;

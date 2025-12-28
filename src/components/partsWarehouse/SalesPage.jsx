@@ -27,7 +27,6 @@ export default function SalesPage() {
 
     const { data, isLoading } = useGetSalesQuery(month, { skip: !month });
     const sales = data?.innerData || [];
-    console.log(sales);
 
     return (
         <div className="sales-container">

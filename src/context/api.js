@@ -1,24 +1,36 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 
-// Bazaviy query — token bilan avtomatik headerga qo‘shiladi
-const baseQuery = fetchBaseQuery({
-  baseUrl: "https://masterskaya-api.medme.uz/api/v1", // yoki sizning server manzilingiz
+export const logoutEvent = new Event("forceLogout");
+
+const rawBaseQuery = fetchBaseQuery({
+  // baseUrl: "http://localhost:4070/api/v1",
+  baseUrl: "https://masterskaya-api.medme.uz/api/v1",
   prepareHeaders: (headers) => {
     const token = localStorage.getItem("token");
-    if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
-    }
+    if (token) headers.set("Authorization", `Bearer ${token}`);
     return headers;
   },
 });
 
-// Retry bilan o‘rash — 3 marta qayta urinish imkoniyati
+const baseQuery = async (args, api, extraOptions) => {
+  const result = await rawBaseQuery(args, api, extraOptions);
+
+  if (result?.error?.data?.message) {
+    const msg = result.error.data.message;
+
+    if (msg === "invalid signature" || msg === "jwt expired") {
+      localStorage.clear();
+      window.dispatchEvent(logoutEvent);   // 🔥 App.jsx ga signal yuboradi
+    }
+  }
+  return result;
+};
+
 const baseQueryWithRetry = retry(baseQuery, { maxRetries: 3 });
 
-// RTK Query API obyektini yaratish
 export const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithRetry,
-  tagTypes: ["Admins", "Orders", "Finance", "Balance", "Sales"], // kerakli taglar
-  endpoints: () => ({}), // endpointlar keyinchalik qo‘shiladi
+  tagTypes: ["Admins", "Orders", "Finance", "Balance", "Sales"],
+  endpoints: () => ({}),
 });

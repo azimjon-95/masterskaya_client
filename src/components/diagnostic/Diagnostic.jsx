@@ -1,173 +1,70 @@
-import React, { useEffect } from "react";
+// DebugDeviceApi.jsx
+import React, { useEffect, useState } from "react";
 import {
-    // Oddiy queries (avto-fetch)
     useGetAndroidFullInfoQuery,
     useGetAndroidPowerQuery,
     useGetIosDeviceInfoQuery,
     useGetIosBatteryQuery,
     useGetIosLogsQuery,
+} from "../../context/deviceApi";
 
-    // Lazy queries (qo'lda chaqirish uchun)
-    useLazyGetAndroidFullInfoQuery,
-    useLazyGetAndroidPowerQuery,
-    useLazyGetIosDeviceInfoQuery,
-    useLazyGetIosBatteryQuery,
-    useLazyGetIosLogsQuery,
-} from "../../context/deviceApi"; // o'zingizning yo'lingizga moslashtiring
+import { io } from "socket.io-client";
+const socket = io("http://localhost:5000");  // backend URL
 
 const DebugDeviceApi = () => {
-    // ================= ODDIY QUERIES =================
+
+    // RTK Query fetch bo'lsin — server socket.trigger ishlaydi
     const androidFull = useGetAndroidFullInfoQuery();
     const androidPower = useGetAndroidPowerQuery();
     const iosDevice = useGetIosDeviceInfoQuery();
     const iosBattery = useGetIosBatteryQuery();
     const iosLogs = useGetIosLogsQuery();
 
-    // ================= LAZY QUERIES =================
-    const [triggerAndroidFull, lazyAndroidFull] = useLazyGetAndroidFullInfoQuery();
-    const [triggerAndroidPower, lazyAndroidPower] = useLazyGetAndroidPowerQuery();
-    const [triggerIosDevice, lazyIosDevice] = useLazyGetIosDeviceInfoQuery();
-    const [triggerIosBattery, lazyIosBattery] = useLazyGetIosBatteryQuery();
-    const [triggerIosLogs, lazyIosLogs] = useLazyGetIosLogsQuery();
+    // socket orqali kelgan natijalarni saqlaymiz
+    const [androidFullData, setAndroidFullData] = useState(null);
+    const [androidPowerData, setAndroidPowerData] = useState(null);
+    const [iosDeviceData, setIosDeviceData] = useState(null);
+    const [iosBatteryData, setIosBatteryData] = useState(null);
+    const [iosLogsData, setIosLogsData] = useState(null);
 
-    // Lazy query'larni komponent yuklanganda bir marta chaqiramiz
     useEffect(() => {
-        triggerAndroidFull();
-        triggerAndroidPower();
-        triggerIosDevice();
-        triggerIosBattery();
-        triggerIosLogs();
-    }, [
-        triggerAndroidFull,
-        triggerAndroidPower,
-        triggerIosDevice,
-        triggerIosBattery,
-        triggerIosLogs,
-    ]);
+        // ANDROID LISTENERS
+        socket.on("android:full-info", setAndroidFullData);
+        socket.on("android:power-live", setAndroidPowerData);
 
-    // ================= BITTA LOGGA HAMMASI =================
-    useEffect(() => {
-        const debugData = {
-            timestamp: new Date().toISOString(),
+        // IOS LISTENERS
+        socket.on("ios:device-info", setIosDeviceData);
+        socket.on("ios:battery", setIosBatteryData);
+        socket.on("ios:logs", setIosLogsData);
 
-            // Oddiy queries
-            getAndroidFullInfo: {
-                data: androidFull.data,
-                isLoading: androidFull.isLoading,
-                isFetching: androidFull.isFetching,
-                isSuccess: androidFull.isSuccess,
-                isError: androidFull.isError,
-                error: androidFull.error,
-            },
-            getAndroidPower: {
-                data: androidPower.data,
-                isLoading: androidPower.isLoading,
-                isFetching: androidPower.isFetching,
-                isSuccess: androidPower.isSuccess,
-                isError: androidPower.isError,
-                error: androidPower.error,
-            },
-            getIosDeviceInfo: {
-                data: iosDevice.data,
-                isLoading: iosDevice.isLoading,
-                isFetching: iosDevice.isFetching,
-                isSuccess: iosDevice.isSuccess,
-                isError: iosDevice.isError,
-                error: iosDevice.error,
-            },
-            getIosBattery: {
-                data: iosBattery.data,
-                isLoading: iosBattery.isLoading,
-                isFetching: iosBattery.isFetching,
-                isSuccess: iosBattery.isSuccess,
-                isError: iosBattery.isError,
-                error: iosBattery.error,
-            },
-            getIosLogs: {
-                data: iosLogs.data,
-                isLoading: iosLogs.isLoading,
-                isFetching: iosLogs.isFetching,
-                isSuccess: iosLogs.isSuccess,
-                isError: iosLogs.isError,
-                error: iosLogs.error,
-            },
-
-            // Lazy queries
-            lazyAndroidFull: {
-                data: lazyAndroidFull.data,
-                isLoading: lazyAndroidFull.isLoading,
-                isFetching: lazyAndroidFull.isFetching,
-                isSuccess: lazyAndroidFull.isSuccess,
-                isError: lazyAndroidFull.isError,
-                error: lazyAndroidFull.error,
-            },
-            lazyAndroidPower: {
-                data: lazyAndroidPower.data,
-                isLoading: lazyAndroidPower.isLoading,
-                isFetching: lazyAndroidPower.isFetching,
-                isSuccess: lazyAndroidPower.isSuccess,
-                isError: lazyAndroidPower.isError,
-                error: lazyAndroidPower.error,
-            },
-            lazyIosDevice: {
-                data: lazyIosDevice.data,
-                isLoading: lazyIosDevice.isLoading,
-                isFetching: lazyIosDevice.isFetching,
-                isSuccess: lazyIosDevice.isSuccess,
-                isError: lazyIosDevice.isError,
-                error: lazyIosDevice.error,
-            },
-            lazyIosBattery: {
-                data: lazyIosBattery.data,
-                isLoading: lazyIosBattery.isLoading,
-                isFetching: lazyIosBattery.isFetching,
-                isSuccess: lazyIosBattery.isSuccess,
-                isError: lazyIosBattery.isError,
-                error: lazyIosBattery.error,
-            },
-            lazyIosLogs: {
-                data: lazyIosLogs.data,
-                isLoading: lazyIosLogs.isLoading,
-                isFetching: lazyIosLogs.isFetching,
-                isSuccess: lazyIosLogs.isSuccess,
-                isError: lazyIosLogs.isError,
-                error: lazyIosLogs.error,
-            },
+        return () => {
+            socket.off("android:full-info");
+            socket.off("android:power-live");
+            socket.off("ios:device-info");
+            socket.off("ios:battery");
+            socket.off("ios:logs");
         };
+    }, []);
 
-        console.log("%c=== DEVICE API FULL DEBUG (All Queries + Lazy) ===",
-            "font-weight: bold; font-size: 18px; color: #FF5722; background: #000; padding: 10px; border-radius: 8px;"
-        );
-        console.log(debugData);
-        console.table(debugData); // Jadval ko'rinishida ham
-    }, [
-        // Har bir o'zgarishda yangilanish uchun barcha statedan bog'lanamiz
-        androidFull, androidPower, iosDevice, iosBattery, iosLogs,
-        lazyAndroidFull, lazyAndroidPower, lazyIosDevice, lazyIosBattery, lazyIosLogs,
-    ]);
+    console.log("📡 SOCKET REAL DATA:", {
+        androidFullData, androidPowerData, iosDeviceData, iosBatteryData, iosLogsData
+    });
 
     return (
-        <div style={{
-            padding: "20px",
-            background: "#fff3e0",
-            border: "2px solid #FF5722",
-            borderRadius: "12px",
-            margin: "20px",
-            fontFamily: "monospace"
-        }}>
-            <h2 style={{ color: "#D84315" }}>🔧 Device API Debug Panel</h2>
-            <p><strong>Konsolni oching (F12 → Console)</strong></p>
-            <p>Barcha query va lazy query natijalari bitta logga yig'ildi!</p>
-            <ul>
-                <li>Oddiy query'lar avtomatik ishlaydi</li>
-                <li>Lazy query'lar komponent yuklanganda bir marta chaqiriladi</li>
-                <li>Har yangilanishda console yangilanadi</li>
-            </ul>
+        <div style={{ padding: 20 }}>
+            <h2>📱 Device Debug Panel</h2>
+
+            <pre>Android Full Info: {JSON.stringify(androidFullData, null, 2)}</pre>
+            <pre>Android Power: {JSON.stringify(androidPowerData, null, 2)}</pre>
+            <pre>iOS Device: {JSON.stringify(iosDeviceData, null, 2)}</pre>
+            <pre>iOS Battery: {JSON.stringify(iosBatteryData, null, 2)}</pre>
+            <pre>iOS Logs: {JSON.stringify(iosLogsData, null, 2)}</pre>
         </div>
     );
 };
 
 export default DebugDeviceApi;
+
 
 // import { useEffect, useState } from "react";
 // import jsPDF from "jspdf";

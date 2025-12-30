@@ -5,6 +5,7 @@ import OrderTable from '../components/Order/OrderTable';
 import Diagnostic from '../components/diagnostic/Diagnostic';
 import PartsWarehouse from '../components/partsWarehouse/PartsWarehouse';
 import AddOrderModal from '../components/addOrder/AddOrderModal';
+import Dashboard from '../components/dashboard/Dashboard';
 import { Clock, Wrench, CheckCircle, Boxes, CircleOff } from 'lucide-react';
 import { translations } from '../translations';
 import { HiOutlineWrenchScrewdriver } from "react-icons/hi2";
@@ -62,7 +63,7 @@ export default function DashboardPage({ username, lang, setLang, onLogout }) {
     // localStorage dan oxirgi tanlangan sahifani o'qish
     useEffect(() => {
         const savedPage = localStorage.getItem('activePage');
-        if (savedPage && ['home', 'finance', 'users', 'warehouse', 'diagnostic'].includes(savedPage)) {
+        if (savedPage && ['home', 'finance', 'users', 'warehouse', 'diagnostic', "dashboard"].includes(savedPage)) {
             setCurrentPage(savedPage);
         } else {
             // Agar yo'q bo'lsa yoki noto'g'ri bo'lsa — home qilamiz
@@ -193,7 +194,9 @@ export default function DashboardPage({ username, lang, setLang, onLogout }) {
                 {currentPage === 'warehouse' && (
                     <PartsWarehouse />
                 )}
-
+                {currentPage === 'dashboard' && (
+                    <Dashboard />
+                )}
             </main>
             {waitingOrdersList?.length > 0 &&
                 <button onClick={handleClick} className="btn-toast">

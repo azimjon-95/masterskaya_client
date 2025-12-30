@@ -1,4 +1,3 @@
-// src/App.jsx
 import { useState, useEffect } from 'react';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
@@ -10,7 +9,6 @@ export default function App() {
   const [username, setUsername] = useState('');
   const [lang, setLang] = useState('uz');
 
-  // Agar localStorage da token bo'lsa avtomatik login qilamiz
   useEffect(() => {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
@@ -20,10 +18,22 @@ export default function App() {
     }
   }, []);
 
+  // 🔥 Token muddati tugaganda avtomatik logout
+  useEffect(() => {
+    const logoutHandler = () => {
+      localStorage.clear();
+      setIsLoggedIn(false);
+      setUsername('');
+    };
+
+    window.addEventListener("forceLogout", logoutHandler);
+
+    return () => window.removeEventListener("forceLogout", logoutHandler);
+  }, []);
+
   useEffect(() => {
     window.addEventListener("online", syncOrdersToServer);
-    syncOrdersToServer(); // kirishda ham tekshirsin
-
+    syncOrdersToServer();
     return () => window.removeEventListener("online", syncOrdersToServer);
   }, []);
 
@@ -34,24 +44,18 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.clear();
     setIsLoggedIn(false);
     setUsername('');
   };
 
-  return <NotificationProvider>
-    {
-      isLoggedIn ? (
-        <DashboardPage
-          username={username}
-          lang={lang}
-          setLang={setLang}
-          onLogout={handleLogout}
-        />
+  return (
+    <NotificationProvider>
+      {isLoggedIn ? (
+        <DashboardPage username={username} lang={lang} setLang={setLang} onLogout={handleLogout} />
       ) : (
         <LoginPage onLogin={handleLogin} />
-      )
-    }
-  </NotificationProvider>;
+      )}
+    </NotificationProvider>
+  );
 }

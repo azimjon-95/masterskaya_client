@@ -10,6 +10,25 @@ body {
   min-height: 100vh;
 }
 
+.animate-spin {
+  animation: rotate 0.8s linear infinite;
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Animations */
 @keyframes slideUp {
   from {

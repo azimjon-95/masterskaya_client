@@ -96,6 +96,12 @@ export default function Header({ t, username, onLogout, lang, setLang, onNavigat
                 <nav className="sidebar-menu">
                     <ul>
                         <li
+                            className={`menu-item ${activeMenu === 'dashboard' ? 'active' : ''}`}
+                            onClick={() => handleMenuClick('dashboard')}
+                        >
+                            <span>Manitoring</span>
+                        </li>
+                        <li
                             className={`menu-item ${activeMenu === 'home' ? 'active' : ''}`}
                             onClick={() => handleMenuClick('home')}
                         >
@@ -113,6 +119,7 @@ export default function Header({ t, username, onLogout, lang, setLang, onNavigat
                         >
                             <span>Ehtiyot qismlar</span>
                         </li>
+
                     </ul>
                 </nav>
 

@@ -1,8 +1,7 @@
 // src/components/LoginForm.jsx
-import { Smartphone, User, Lock } from 'lucide-react';
-import LanguageSelector from './LanguageSelector';
+import { Smartphone, User, Lock, Loader2 } from 'lucide-react';
 
-export default function LoginForm({ username, setUsername, password, setPassword, lang, setLang, onLogin, t }) {
+export default function LoginForm({ username, setUsername, password, setPassword, isLoading, onLogin, t }) {
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') onLogin();
     };
@@ -36,8 +35,12 @@ export default function LoginForm({ username, setUsername, password, setPassword
                         />
                     </div>
                     {/* <LanguageSelector lang={lang} setLang={setLang} /> */}
-                    <button type="button" onClick={onLogin} className="login-btn">
-                        {t.loginButton}
+                    <button type="button" disabled={isLoading} onClick={onLogin} className="login-btn">
+                        {isLoading ? (
+                            <Loader2 className="animate-spin" size={18} />
+                        ) : (
+                            t.loginButton
+                        )}
                     </button>
                 </div>
             </div>

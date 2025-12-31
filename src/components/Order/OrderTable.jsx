@@ -6,7 +6,7 @@ import {
     Loader2,
 } from 'lucide-react';
 import { HiMiniWrenchScrewdriver } from 'react-icons/hi2';
-
+import { FaRegImages } from "react-icons/fa6";
 import {
     useDeleteOrderMutation,
     useUpdateStatusMutation,
@@ -34,6 +34,7 @@ export default function OrderTable({ orders = [], t, refreshOrders }) {
     const [repairCost, setRepairCost] = useState('');
     const [failReason, setFailReason] = useState('');
     const [waitingReason, setWaitingReason] = useState('');
+    const [imageModalOrder, setImageModalOrder] = useState(null);
 
     // API mutation'lari
     const [deleteOrder] = useDeleteOrderMutation();
@@ -128,10 +129,10 @@ export default function OrderTable({ orders = [], t, refreshOrders }) {
             return;
         }
 
-        setLoadingOrderId(waitingModalOrder._id);
+        setLoadingOrderId(waitingModalOrder?._id);
         try {
             await updateWaiting({
-                id: waitingModalOrder._id,
+                id: waitingModalOrder?._id,
                 body: { isWaiting: true, reason: waitingReason.trim() },
             }).unwrap();
 
@@ -191,6 +192,16 @@ export default function OrderTable({ orders = [], t, refreshOrders }) {
         });
         setFailedModalOrder(null);
     };
+    // Formatlash funksiyalari
+    const formatFullName = (fullName = "") =>
+        fullName
+            .split(" ")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(" ");
+
+
+    const formatPhone = (phone = "") =>
+        phone.replace(/(\+998)(\d{2})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4 $5");
 
     return (
         <>
@@ -223,8 +234,23 @@ export default function OrderTable({ orders = [], t, refreshOrders }) {
                             {/* Card Header */}
                             <div className="card-header">
                                 <div className="customer-info">
-                                    <h3>{order.customerName}</h3>
-                                    <p className="phone-number">{order.phoneNumber}</p>
+                                    <h3>{formatFullName(order?.customerName)}</h3>
+                                    <div className="customer-contacts">
+                                        <a href={`tel:${order.phoneNumber}`} className="phone-number">
+                                            {formatPhone(order.phoneNumber)}
+                                        </a>
+                                        {(order?.phoneImage || order?.clientImage) && (
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setImageModalOrder(order);
+                                                }}
+                                            // className="images-btn"
+                                            >
+                                                <FaRegImages />
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div className="customer-status">
@@ -577,8 +603,8 @@ export default function OrderTable({ orders = [], t, refreshOrders }) {
 
                         <div className="modal-body-content">
                             <p className="modal-subtitle">
-                                <strong>{waitingModalOrder.customerName}</strong> —{' '}
-                                {waitingModalOrder.brand} {waitingModalOrder.phoneModel}
+                                <strong>{waitingModalOrder?.customerName}</strong> —{' '}
+                                {waitingModalOrder?.brand} {waitingModalOrder?.phoneModel}
                             </p>
 
                             <div className="form-group_modal">
@@ -607,6 +633,62 @@ export default function OrderTable({ orders = [], t, refreshOrders }) {
                                     )}
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Telefon va mijoz rasmlari modali */}
+            {imageModalOrder && (
+                <div className="modalImg_overlay" onClick={() => setImageModalOrder(null)}>
+                    <div
+                        className="modalImg_box modalImg_animated"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="modalImg_top">
+                            <h2>📸 Buyurtma rasmlari</h2>
+                            <button
+                                className="modalImg_close_btn"
+                                onClick={() => setImageModalOrder(null)}
+                            >
+                                ✕
+                            </button>
+                        </div>
+
+                        <div className="modalImg_body">
+                            <p className="modalImg_subtitle">
+                                <strong>{formatFullName(imageModalOrder.customerName)}</strong> —{' '}
+                                {imageModalOrder.brand} {imageModalOrder.phoneModel}
+                            </p>
+
+                            <div className="modalImg_images_grid">
+                                {imageModalOrder.phoneImage && (
+                                    <div className="modalImg_image_container">
+                                        <p className="modalImg_label">Telefon rasmi</p>
+                                        <img
+                                            src={imageModalOrder.phoneImage}
+                                            alt="Telefon"
+                                            className="modalImg_image"
+                                        />
+                                    </div>
+                                )}
+
+                                {imageModalOrder.clientImage && (
+                                    <div className="modalImg_image_container">
+                                        <p className="modalImg_label">Mijoz rasmi (quti yoki hujjat)</p>
+                                        <img
+                                            src={imageModalOrder.clientImage}
+                                            alt="Mijoz rasmi"
+                                            className="modalImg_image"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Agar hech qaysi rasm bo'lmasa (himoya) */}
+                            {(!imageModalOrder.phoneImage && !imageModalOrder.clientImage) && (
+                                <p className="modalImg_no_images">Rasmlar mavjud emas</p>
+                            )}
                         </div>
                     </div>
                 </div>

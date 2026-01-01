@@ -6,6 +6,7 @@ import {
     useGetIosDeviceInfoQuery,
     useGetIosBatteryQuery,
     useGetIosLogsQuery,
+    useLazyGetFullDeviceInfoQuery
 } from "../../context/deviceApi";
 
 import { io } from "socket.io-client";
@@ -14,11 +15,27 @@ const socket = io("http://localhost:5000");  // backend URL
 const DebugDeviceApi = () => {
 
     // RTK Query fetch bo'lsin — server socket.trigger ishlaydi
-    const androidFull = useGetAndroidFullInfoQuery();
-    const androidPower = useGetAndroidPowerQuery();
-    const iosDevice = useGetIosDeviceInfoQuery();
-    const iosBattery = useGetIosBatteryQuery();
-    const iosLogs = useGetIosLogsQuery();
+    // const androidFull = useGetAndroidFullInfoQuery();
+    // const androidPower = useGetAndroidPowerQuery();
+    // const iosDevice = useGetIosDeviceInfoQuery();
+    // const iosBattery = useGetIosBatteryQuery();
+    // const iosLogs = useGetIosLogsQuery();
+    // const fullDeviceInfo = useLazyGetFullDeviceInfoQuery()
+    // console.log(fullDeviceInfo);
+    const token = localStorage.getItem('token');
+    useEffect(() => {
+        // token
+        fetch("http://localhost:4070/api/v1/device_info", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        })
+            .then(res => res.json())
+            .then(data => console.log(data));
+    }, []);
+
 
     // socket orqali kelgan natijalarni saqlaymiz
     const [androidFullData, setAndroidFullData] = useState(null);
@@ -46,9 +63,9 @@ const DebugDeviceApi = () => {
         };
     }, []);
 
-    console.log("📡 SOCKET REAL DATA:", {
-        androidFullData, androidPowerData, iosDeviceData, iosBatteryData, iosLogsData
-    });
+    // console.log("📡 SOCKET REAL DATA:", {
+    //     androidFullData, androidPowerData, iosDeviceData, iosBatteryData, iosLogsData
+    // });
 
     return (
         <div style={{ padding: 20 }}>

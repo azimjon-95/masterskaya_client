@@ -21,20 +21,36 @@ export default function DashboardPage({ username, lang, setLang, onLogout }) {
     const [search, setSearch] = useState('');
     const [selectedFilter, setSelectedFilter] = useState('active');
     const [currentPage, setCurrentPage] = useState('home');
+
     const today = new Date();
     const currentYear = today.getFullYear();
     const currentMonth = String(today.getMonth() + 1).padStart(2, '0');
-    const [selectedMonth, setSelectedMonth] = useState(`${currentYear}.${currentMonth}`);
+
+    // 🟢 Yil va oy alohida tanlanadi
+    const [selectedYear, setSelectedYear] = useState(currentYear);
+    const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+
+    // 🔥 Serverga yuboriladigan yakuniy ko‘rinish
+    const selectedDate = `${selectedYear}.${selectedMonth}`;
+
     const [showToast, setShowToast] = useState(false);
     const { data: waitingOrders = [] } = useGetWaitingOrdersQuery();
-    const t = translations[lang];
     const waitingOrdersList = waitingOrders?.innerData || [];
+    const t = translations[lang];
 
     const uzMonths = [
         "Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun",
         "Iyul", "Avgust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"
     ];
-
+    const years = [
+        "2024",
+        "2025",
+        "2026",
+        "2027",
+        "2028",
+        "2029",
+        "2030"
+    ]
     const handleClick = () => {
         setShowToast(true);
 
@@ -44,15 +60,17 @@ export default function DashboardPage({ username, lang, setLang, onLogout }) {
         }, 3000);
     };
 
-    // RTK Query orqali ma'lumot olish
+    // 🟢 RTK Query orqali ma'lumot olish
     const { data, isLoading, refetch } = useGetOrdersQuery(
-        { month: selectedMonth, filter: selectedFilter },
+        { month: selectedDate, filter: selectedFilter },
         {
             refetchOnMountOrArgChange: true,
             refetchOnReconnect: true,
-            skip: !selectedMonth
+            skip: !selectedDate
         }
     );
+
+
     const handleNavigate = (page) => {
         setCurrentPage(page);
         localStorage.setItem('activePage', page);
@@ -134,6 +152,7 @@ export default function DashboardPage({ username, lang, setLang, onLogout }) {
                                 />
 
                                 {/* Status filter (active/history/failed) */}
+
                                 <select
                                     className="calendar-input"
                                     value={selectedFilter}
@@ -143,24 +162,28 @@ export default function DashboardPage({ username, lang, setLang, onLogout }) {
                                     <option value="history">Tarix (Olib ketilgan)</option>
                                     <option value="failed">Tuzalmaganlar</option>
                                 </select>
+                                <div className="calendar">
+                                    <select
+                                        className="calendar-input"
+                                        value={selectedMonth}
+                                        onChange={(e) => setSelectedMonth(e.target.value)}
+                                    >
+                                        {uzMonths.map((monthName, index) => {
+                                            const monthNumber = String(index + 1).padStart(2, '0');
+                                            return <option key={monthNumber} value={monthNumber}>{monthName}</option>;
+                                        })}
+                                    </select>
 
-                                {/* Oy tanlash */}
-                                <select
-                                    className="calendar-input"
-                                    value={selectedMonth}
-                                    onChange={(e) => setSelectedMonth(e.target.value)}
-                                >
-                                    {uzMonths.map((monthName, index) => {
-                                        const monthNumber = String(index + 1).padStart(2, '0');
-                                        const value = `${currentYear}.${monthNumber}`;
-                                        return (
-                                            <option key={value} value={value}>
-                                                {monthName}
-                                            </option>
-                                        );
-                                    })}
-                                </select>
-
+                                    <select
+                                        className="calendar-input"
+                                        value={selectedYear}
+                                        onChange={(e) => setSelectedYear(e.target.value)}
+                                    >
+                                        {years.map((y) => (
+                                            <option key={y} value={y}>{y}</option>
+                                        ))}
+                                    </select>
+                                </div>
                                 <button onClick={() => setShowAddOrder(true)} className="add-btn-cre">
                                     + <p>{t.addOrder}</p>
                                 </button>

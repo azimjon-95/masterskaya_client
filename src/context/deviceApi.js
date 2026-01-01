@@ -25,6 +25,11 @@ export const deviceApi = api.injectEndpoints({
             query: () => "/ios/logs",
         }),
 
+        // get("/api/device-info"
+        getFullDeviceInfo: builder.query({
+            query: () => "/device_info",
+        }),
+
     }),
     overrideExisting: false,
 });
@@ -42,4 +47,7 @@ export const {
     useLazyGetIosDeviceInfoQuery,
     useLazyGetIosBatteryQuery,
     useLazyGetIosLogsQuery,
+
+    // RTK Query fetch bo'lsin — server socket.trigger ishlaydi
+    useLazyGetFullDeviceInfoQuery,
 } = deviceApi;

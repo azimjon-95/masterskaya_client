@@ -14,8 +14,9 @@ import {
 } from '../../context/orderApi';
 import { useNotification } from '../Notification/NotificationToast';
 import { NumberFormat } from '../../hook/NumberFormat';
-
+import { LuClock4 } from "react-icons/lu";
 import OrderActions from './actions/OrderActions';
+import RepairProgressModal from './repair/RepairProgressModal'; // yo'lni to'g'ri ko'rsating
 import OrderDetailsModal from './OrderDetailsModal';
 import './OrderTable.css';
 
@@ -28,6 +29,7 @@ export default function OrderTable({ orders = [], t, refreshOrders }) {
     const [failedModalOrder, setFailedModalOrder] = useState(null);
     const [waitingModalOrder, setWaitingModalOrder] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(null);
+    const [repairProgressOrder, setRepairProgressOrder] = useState(null);
 
     // Form maydonlari
     const [repairDetails, setRepairDetails] = useState('');
@@ -370,6 +372,18 @@ export default function OrderTable({ orders = [], t, refreshOrders }) {
 
                                 {order.status === 'inProgress' && (
                                     <div style={{ display: 'flex', gap: '5px' }}>
+                                        <button
+                                            className="details-btn status-failed"
+                                            disabled={loadingOrderId === order._id}
+                                            style={{
+                                                background: '#0022ff',
+                                                padding: loadingOrderId === order._id ? '2px 8px' : '',
+                                            }}
+                                            onClick={() => setRepairProgressOrder(order)}
+                                        >
+                                            <HiMiniWrenchScrewdriver size={15} />
+                                        </button>
+
                                         {/* Kutish tugmasi */}
                                         <button
                                             className="details-btn status-failed"
@@ -383,7 +397,8 @@ export default function OrderTable({ orders = [], t, refreshOrders }) {
                                             {loadingOrderId === order._id ? (
                                                 <Loader2 className="spinner-icon" size={15} />
                                             ) : (
-                                                <HiMiniWrenchScrewdriver size={15} />
+
+                                                <LuClock4 size={15} />
                                             )}
                                             {order.waiting?.isWaiting && (
                                                 <span style={{ fontSize: '14px', marginLeft: '4px' }}>✔</span>
@@ -692,6 +707,19 @@ export default function OrderTable({ orders = [], t, refreshOrders }) {
                         </div>
                     </div>
                 </div>
+            )}
+            {repairProgressOrder && (
+                <RepairProgressModal
+                    order={repairProgressOrder}
+                    onClose={() => setRepairProgressOrder(null)}
+                    onSave={() => {
+                        // Bu yerda saqlash logikasi bo'lishi mumkin
+                        showNotification('Maʼlumotlar saqlandi', 'success');
+                        refreshOrders();
+                        setRepairProgressOrder(null);
+                    }}
+                    isSaving={loadingOrderId === repairProgressOrder?._id}
+                />
             )}
         </>
     );

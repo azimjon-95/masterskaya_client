@@ -1,12 +1,14 @@
-// src/pages/FinancePage.jsx
+// // src/pages/FinancePage.jsx
 import { useNotification } from "../../components/Notification/NotificationToast";
 import { useState } from 'react';
-import { Trash2, Edit2, Loader2 } from 'lucide-react';
+import { Trash2, Loader2, Eye } from 'lucide-react';
 import {
     useGetFinanceDataQuery,
     useGetBalanceQuery,
     useCreateTransactionMutation,
     useDeleteTransactionMutation,
+    useGetDebtorsQuery,
+    usePayDebtByPhoneMutation
 } from "../../context/financeApi";
 
 import './style.css';
@@ -28,10 +30,13 @@ const incomeCategories = [
     "Kafolat bo'yicha ta'mirlash",
     "Boshqa xizmatlar",
     "Boshqa kirim",
+    "Qarz qaytarildi",
+    "Qarz olish",
 ];
 
 // Chiqim kategoriyalari
 const expenseCategories = [
+    "O'zimni ehtiyojlarimga",
     "Zapchast xaridi",
     "Asbob-uskuna xaridi",
     "Ish haqi (usta va yordamchilarga)",
@@ -48,6 +53,8 @@ const expenseCategories = [
     "Jarima yoki zarar to'lovlari",
     "Boshqa chiqim",
     "Nonushta",
+    "Qarz berish",
+    "Qarzni qaytarish",
 ];
 
 // O‘zbekcha oy nomlari
@@ -56,28 +63,36 @@ const uzbekMonths = [
     "May", "Iyun", "Iyul", "Avg",
     "Sent", "Okt", "Noy", "Dek"
 ];
+
 const formatUzbekDate = (dateString) => {
     const date = new Date(dateString);
-
-    let day = date.getDate();
-    let month = uzbekMonths[date.getMonth()];
-    let hours = date.getHours().toString().padStart(2, "0");
-    let minutes = date.getMinutes().toString().padStart(2, "0");
-
+    const day = date.getDate();
+    const month = uzbekMonths[date.getMonth()];
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
     return `${day}-${month} / ${hours}:${minutes}`;
 };
+
 export default function FinancePage({ t }) {
     const { showNotification } = useNotification();
 
-    // Joriy yil va oy (hozir: Dekabr 2025)
-    const currentYear = new Date().getFullYear(); // 2025
-    const currentMonthIndex = new Date().getMonth(); // 11 (Dekabr)
+    const currentYear = new Date().getFullYear();
+    const currentMonthIndex = new Date().getMonth();
+
     const [selectedFilter, setSelectedFilter] = useState(null);
-    // Oy va yilni tanlash uchun state
+
+
+    const [payDebtByPhone, { isLoading: isPayingDebt }] = usePayDebtByPhoneMutation();
+
     const [selectedMonth, setSelectedMonth] = useState({
         year: currentYear,
-        monthIndex: currentMonthIndex, // default: hozirgi oy
+        monthIndex: currentMonthIndex,
     });
+
+    const availableYears = [];
+    for (let y = currentYear - 5; y <= currentYear + 1; y++) {
+        availableYears.push(y);
+    }
 
     // Forma ma'lumotlari
     const [formData, setFormData] = useState({
@@ -88,8 +103,18 @@ export default function FinancePage({ t }) {
         date: new Date().toISOString().split('T')[0],
     });
 
-    // Backend'ga jo'natiladigan month parametri
-    // Agar "Barcha oylar" tanlansa → undefined (barcha tranzaksiyalar)
+    // Qarzga oid qo'shimcha ma'lumotlar
+    const [debtData, setDebtData] = useState({
+        debtType: null,
+        fullName: '',
+        phone: '',
+        dueDate: '',
+    });
+
+    // Delete va detail modal state'lari
+    const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+    const [selectedTransaction, setSelectedTransaction] = useState(null);
+    // Backend parametrlari
     const monthParam = selectedMonth.monthIndex === -1
         ? undefined
         : `${selectedMonth.year}.${String(selectedMonth.monthIndex + 1).padStart(2, '0')}`;
@@ -102,35 +127,117 @@ export default function FinancePage({ t }) {
     } = useGetFinanceDataQuery(monthParam);
 
     const { data: balanceData, isFetching: isFetchingBalance } = useGetBalanceQuery();
+    const { data: debtsData } = useGetDebtorsQuery();
+    const activeDebts = debtsData?.innerData || [];
 
     const [createTransaction, { isLoading: isCreating }] = useCreateTransactionMutation();
-    const [deleteTransaction, { isLoading: isDeleting }] = useDeleteTransactionMutation();
+    const [deleteTransaction] = useDeleteTransactionMutation();
 
     // Ma'lumotlar
     const transactions = financeData?.innerData?.transactions || [];
     const stats = financeData?.innerData?.stats || {};
     const currentBalance = balanceData?.innerData?.totalMoney ?? stats.balance ?? 0;
 
+    // Yordamchi funksiyalar
+    const isDebtRelatedCategory = (category) => {
+        return [
+            "Qarz berish",
+            "Qarz olish",
+        ].includes(category);
+    };
+
+    const getDebtTypeFromCategory = (category) => {
+        if (category === "Qarz berish") return "given";
+        if (category === "Qarz olish") return "taken";
+        return null;
+    };
+
+    const isDebtReturnCategory = (category) => {
+        return category === "Qarz qaytarildi" || category === "Qarzni qaytarish";
+    };
+
     // Yangi tranzaksiya qo'shish
+    const [selectedDebtForPayment, setSelectedDebtForPayment] = useState(null);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Majburiy maydonlarni tekshirish
         if (!formData.description.trim() || !formData.category.trim() || !formData.amount || formData.amount <= 0) {
             showNotification("Barcha maydonlarni to'g'ri to'ldiring!", "error");
             return;
         }
 
+        // Qarz qaytarish kategoriyalari uchun maxsus logika
+        if (formData.category === "Qarzni qaytarish" || formData.category === "Qarz qaytarildi") {
+            if (!selectedDebtForPayment) {
+                showNotification("Iltimos, qaytarilayotgan qarzni tanlang!", "error");
+                return;
+            }
+
+            try {
+                await payDebtByPhone({
+                    phone: selectedDebtForPayment.phone.trim(),
+                    amount: Number(formData.amount),
+                    type: formData.type
+                }).unwrap();
+
+                showNotification(
+                    `${selectedDebtForPayment.fullName} (${selectedDebtForPayment.phone}) bo‘yicha ${Number(formData.amount).toLocaleString()} so‘m qarz muvaffaqiyatli yopildi! ✅`,
+                    "success"
+                );
+
+                // Formani tozalash
+                setFormData({
+                    type: 'income',
+                    description: '',
+                    amount: '',
+                    category: '',
+                    date: new Date().toISOString().split('T')[0],
+                });
+                setSelectedDebtForPayment(null);
+                refetchFinance();
+                return;
+            } catch (err) {
+                showNotification(
+                    err?.data?.message || "Qarzni yopishda xatolik yuz berdi",
+                    "error"
+                );
+                return;
+            }
+        }
+
+        // Qarz berish/olishda F.I.Sh majburiy
+        if (isDebtRelatedCategory(formData.category)) {
+            if (!debtData.fullName.trim() || debtData.fullName.length < 3) {
+                showNotification("F.I.Sh to'g'ri kiritilmadi!", "error");
+                return;
+            }
+        }
+
         try {
-            await createTransaction({
+            const payload = {
                 type: formData.type,
                 description: formData.description.trim(),
                 category: formData.category.trim(),
                 amount: Number(formData.amount),
                 date: formData.date,
-            }).unwrap();
+            };
 
-            refetchFinance();
-            isFetchingBalance();
-            // Formani tozalash
+            // Yangi qarz yaratish
+            if (isDebtRelatedCategory(formData.category)) {
+                payload.debt = {
+                    debtType: getDebtTypeFromCategory(formData.category),
+                    amount: Number(formData.amount),
+                    fullName: debtData.fullName.trim(),
+                    phone: debtData.phone.trim() || undefined,
+                    dueDate: debtData.dueDate ? new Date(debtData.dueDate) : undefined,
+                };
+            }
+
+            await createTransaction(payload).unwrap();
+
+            // Tozalash
             setFormData({
                 type: 'income',
                 description: '',
@@ -138,26 +245,29 @@ export default function FinancePage({ t }) {
                 category: '',
                 date: new Date().toISOString().split('T')[0],
             });
+            setDebtData({ debtType: null, fullName: '', phone: '', dueDate: '' });
+            setSelectedDebtForPayment(null);
 
-            showNotification("Tranzaksiya muvaffaqiyatli qo'shildi!", "success");
+            showNotification("Tranzaksiya muvaffaqiyatli qo'shildi! ✅", "success");
+            refetchFinance();
         } catch (err) {
-            showNotification("Xato: " + (err.data?.message || "Tranzaksiya qo'shilmadi"), "error");
+            showNotification("Xato: " + (err?.data?.message || "Tranzaksiya qo'shilmadi"), "error");
         }
     };
 
-    // Tranzaksiyani o'chirish
-    const handleDelete = async (id) => {
+    // O'chirish tasdiqlash
+    const handleDeleteConfirm = async (id) => {
         try {
             await deleteTransaction(id).unwrap();
-
-            showNotification("Tranzaksiya muvaffaqiyatli o'chirildi!", "success");
-            refetchFinance(); // yangilash
+            showNotification("Tranzaksiya muvaffaqiyatli o'chirildi! ✅", "success");
+            refetchFinance();
         } catch (err) {
             showNotification("O'chirishda xato: " + (err.data?.message || "Noma'lum xato"), "error");
+        } finally {
+            setDeleteConfirmId(null);
         }
     };
 
-    // Loading holati
     if (isLoadingFinance) {
         return (
             <div className="finance-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '70vh' }}>
@@ -169,7 +279,7 @@ export default function FinancePage({ t }) {
 
     return (
         <div className="finance-container">
-            {/* Umumiy statistika */}
+            {/* Statistika */}
             <div className="finance-stats">
                 <div className="stat-card_finance income">
                     <h3>{t?.totalIncome || "Jami kirim"}</h3>
@@ -188,36 +298,111 @@ export default function FinancePage({ t }) {
             </div>
 
             <div className="finance-content">
-                {/* Chap: Forma */}
+                {/* Forma */}
                 <div className="finance-form-section">
-                    <form className="transaction-form_finance">
-                        <select
-                            value={formData.type}
-                            onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                            required
-                        >
-                            <option value="income">Kirim</option>
-                            <option value="expense">Chiqim</option>
-                        </select>
+                    <form className="transaction-form_finance" onSubmit={handleSubmit}>
+                        <div className="transaction-form_box">
+                            <select
+                                value={formData.type}
+                                onChange={(e) => {
+                                    const newType = e.target.value;
+                                    setFormData({
+                                        ...formData,
+                                        type: newType,
+                                        category: '',
+                                    });
+                                    setDebtData({ debtType: null, fullName: '', phone: '', dueDate: '' });
+                                }}
+                                required
+                            >
+                                <option value="income">Kirim</option>
+                                <option value="expense">Chiqim</option>
+                            </select>
 
-                        <select
-                            value={formData.category}
-                            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                            required
-                        >
-                            <option value="" disabled>Kategoriyani tanlang</option>
-                            {(formData.type === 'income' ? incomeCategories : expenseCategories).map((cat) => (
-                                <option key={cat} value={cat}>{cat}</option>
-                            ))}
-                        </select>
+                            <select
+                                value={formData.category}
+                                onChange={(e) => {
+                                    const cat = e.target.value;
+                                    setFormData({ ...formData, category: cat });
 
-                        <input
-                            type="text"
-                            placeholder="Izoh (masalan: Buyurtma to'lovi)"
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            required
-                        />
+                                    const debtType = getDebtTypeFromCategory(cat);
+                                    if (debtType) {
+                                        setDebtData({ ...debtData, debtType });
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            type: debtType === "given" ? "expense" : "income"
+                                        }));
+                                    } else {
+                                        setDebtData({ debtType: null, fullName: '', phone: '', dueDate: '' });
+                                    }
+                                }}
+                                required
+                            >
+                                <option value="" disabled>Kategoriyani tanlang</option>
+                                {(formData.type === 'income' ? incomeCategories : expenseCategories).map((cat) => (
+                                    <option key={cat} value={cat}>{cat}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Yangi qarz yaratish maydonlari */}
+                        {isDebtRelatedCategory(formData.category) && !isDebtReturnCategory(formData.category) && (
+                            <>
+                                <div className="transaction-form_box">
+                                    <input
+                                        type="text"
+                                        placeholder="F.I.Sh (majburiy)"
+                                        value={debtData.fullName}
+                                        onChange={(e) => setDebtData({ ...debtData, fullName: e.target.value })}
+                                        required
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="Telefon raqami (ixtiyoriy)"
+                                        value={debtData.phone}
+                                        onChange={(e) => setDebtData({ ...debtData, phone: e.target.value })}
+                                    />
+                                </div>
+                                <input
+                                    type="date"
+                                    placeholder="Qaytarish muddati (ixtiyoriy)"
+                                    value={debtData.dueDate}
+                                    onChange={(e) => setDebtData({ ...debtData, dueDate: e.target.value })}
+                                />
+                            </>
+                        )}
+
+                        {/* Qarz qaytarish uchun mavjud qarzni tanlash */}
+                        {(formData.category === "Qarzni qaytarish" || formData.category === "Qarz qaytarildi") && (
+                            <select
+                                value={selectedDebtForPayment?.phone || ""}
+                                onChange={(e) => {
+                                    const selected = activeDebts.find(debt => debt.phone === e.target.value);
+                                    setSelectedDebtForPayment(selected || null);
+                                }}
+                                required
+                                style={{ fontSize: "13px", padding: "10px", marginBottom: "10px" }}
+                            >
+                                <option value="" disabled>
+                                    Qaytarilayotgan qarzni tanlang
+                                </option>
+                                {activeDebts.length === 0 ? (
+                                    <option disabled>Hech qanday faol qarz yo'q</option>
+                                ) : (
+                                    activeDebts
+                                        .filter(debt => {
+                                            const requiredType = formData.category === "Qarzni qaytarish" ? "taken" : "given";
+                                            return debt.debtType === requiredType && !debt.isReturned;
+                                        })
+                                        .map((debt, inx) => (
+                                            <option key={inx} value={debt.phone}>
+                                                {debt.fullName} – {debt.amount.toLocaleString()} so'm{' '}
+                                                {debt.phone ? `(${debt.phone})` : ''}
+                                            </option>
+                                        ))
+                                )}
+                            </select>
+                        )}
 
                         <input
                             type="number"
@@ -228,7 +413,14 @@ export default function FinancePage({ t }) {
                             required
                         />
 
-                        <button onClick={handleSubmit} type="submit" className="submit-btn_finance" disabled={isCreating}>
+                        <textarea
+                            placeholder="Izoh (masalan: Buyurtma to'lovi)"
+                            value={formData.description}
+                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                            required
+                        />
+
+                        <button type="submit" className="submit-btn_finance" disabled={isCreating || isPayingDebt}>
                             {isCreating ? (
                                 <>
                                     <Loader2 size={18} className="animate-spin" /> Saqlanmoqda...
@@ -240,36 +432,42 @@ export default function FinancePage({ t }) {
                     </form>
                 </div>
 
-                {/* O'ng: Jadval */}
+                {/* Jadval */}
                 <div className="finance-table-section">
                     <div className="section-header_finance">
                         <h2>{t?.transactions || "Tranzaksiyalar tarixi"}</h2>
 
-                        {/* Oy va yil tanlash */}
                         <div className="month-selector" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
                             <span style={{ fontWeight: '500' }}>Filtr:</span>
-
                             <select
-                                value={selectedMonth.monthIndex}
-                                onChange={(e) => setSelectedMonth({ ...selectedMonth, monthIndex: Number(e.target.value) })}
+                                value={selectedMonth.year}
                                 style={{ padding: '5px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
+                                onChange={(e) => setSelectedMonth({ ...selectedMonth, year: Number(e.target.value) })}
                             >
-                                {uzbekMonths.map((monthName, index) => (
-                                    <option key={index} value={index}>
-                                        {monthName}
-                                    </option>
+                                {availableYears.map((year) => (
+                                    <option key={year} value={year}>{year}</option>
                                 ))}
                             </select>
 
                             <select
-                                onChange={(e) => setSelectedFilter(e.target.value)}
+                                value={selectedMonth.monthIndex}
                                 style={{ padding: '5px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
+                                onChange={(e) => setSelectedMonth({ ...selectedMonth, monthIndex: Number(e.target.value) })}
                             >
+                                <option value={-1}>Barcha oylar</option>
+                                {uzbekMonths.map((monthName, index) => (
+                                    <option key={index} value={index}>{monthName}</option>
+                                ))}
+                            </select>
 
+                            <select
+                                value={selectedFilter || "all"}
+                                style={{ padding: '5px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
+                                onChange={(e) => setSelectedFilter(e.target.value === "all" ? null : e.target.value)}
+                            >
                                 <option value="all">Hammasi</option>
                                 <option value="income">Kirim</option>
                                 <option value="expense">Chiqim</option>
-
                             </select>
                         </div>
                     </div>
@@ -284,56 +482,84 @@ export default function FinancePage({ t }) {
                                         <th>Izoh</th>
                                         <th>Kategoriya</th>
                                         <th>Summa</th>
-                                        <th>O'chirish</th>
+                                        <th>Amallar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {transactions.length === 0 ? (
                                         <tr>
                                             <td colSpan="6" style={{ textAlign: 'center', padding: '30px', color: '#666' }}>
-                                                {selectedMonth.monthIndex === -1
-                                                    ? "Hali tranzaksiya yo'q"
-                                                    : `${uzbekMonths[selectedMonth.monthIndex]} ${selectedMonth.year} oyida tranzaksiya topilmadi`}
+                                                Tranzaksiya topilmadi
                                             </td>
                                         </tr>
                                     ) : (
                                         transactions
-                                            .filter((trans) => {
-                                                if (!selectedFilter || selectedFilter === "all") return true;
-                                                return trans.type === selectedFilter;
+                                            .filter((trans) => !selectedFilter || selectedFilter === "all" || trans.type === selectedFilter)
+                                            .map((trans) => {
+                                                const isPersonal = trans.type === 'expense' && trans.category === "O'zimni ehtiyojlarimga";
+                                                const hasDebt = trans.debt && trans.debt.amount > 0;
+                                                const isActiveDebt = hasDebt && !trans.debt.isReturned && trans.debt.phone;
+
+                                                return (
+                                                    <tr key={trans._id || trans.id}>
+                                                        <td>{formatUzbekDate(trans.date)}</td>
+                                                        <td>
+                                                            <span className={`type-badge ${trans.type} ${isPersonal ? 'personal' : ''}`}>
+                                                                {isPersonal ? 'Shaxsiy chiqim' : (trans.type === 'income' ? 'Kirim' : 'Chiqim')}
+                                                            </span>
+                                                        </td>
+                                                        <td style={{ overflow: "hidden" }}>{trans.description || '(izoh yoʻq)'}</td>
+                                                        <td>{trans.category}</td>
+                                                        <td style={{
+                                                            color: trans.type === 'income' ? '#137333' : (isPersonal ? '#e67e22' : '#d32f2f'),
+                                                            fontWeight: isPersonal ? '600' : 'normal'
+                                                        }}>
+                                                            {trans.amount.toLocaleString("uz-UZ")} so'm
+                                                        </td>
+                                                        <td>
+                                                            <div className="fin_actions" style={{ position: 'relative', display: 'flex', gap: '6px', alignItems: 'center' }}>
+                                                                {/* Ko'rish tugmasi */}
+                                                                {hasDebt && (
+                                                                    <button
+                                                                        onClick={() => setSelectedTransaction(trans)}
+                                                                        className="action-btn view"
+                                                                        title="Tafsilotlarni ko'rish"
+                                                                    >
+                                                                        <Eye size={16} />
+                                                                    </button>
+                                                                )}
+
+                                                                {/* O'chirish tugmasi */}
+                                                                <div style={{ position: 'relative' }}>
+                                                                    <button
+                                                                        onClick={() => setDeleteConfirmId(trans._id || trans.id)}
+                                                                        className="action-btn delete"
+                                                                        title="O'chirish"
+                                                                    >
+                                                                        <Trash2 size={16} />
+                                                                    </button>
+
+                                                                    {deleteConfirmId === (trans._id || trans.id) && (
+                                                                        <div className="confirm-popover" onClick={(e) => e.stopPropagation()}>
+                                                                            <div className="popover-content">
+                                                                                <p>Bu tranzaksiyani o'chirmoqchimisiz?</p>
+                                                                                <div className="popover-actions">
+                                                                                    <button className="btn-cancel" onClick={() => setDeleteConfirmId(null)}>
+                                                                                        Yo'q
+                                                                                    </button>
+                                                                                    <button className="btn-danger" onClick={() => handleDeleteConfirm(trans._id || trans.id)}>
+                                                                                        Ha, o'chirish
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                );
                                             })
-                                            .map((trans) => (
-                                                <tr key={trans._id || trans.id}>
-                                                    <td>
-                                                        {formatUzbekDate(trans.date)}
-                                                    </td>
-                                                    <td>
-                                                        <span className={`type-badge ${trans.type}`}>
-                                                            {trans.type === 'income' ? 'Kirim' : 'Chiqim'}
-                                                        </span>
-                                                    </td>
-                                                    <td>{trans.description}</td>
-                                                    <td>{trans.category}</td>
-                                                    <td style={{ color: trans.type === 'income' ? '#137333' : '#d32f2f' }}>
-                                                        {trans.amount.toLocaleString("uz-UZ")} so'm
-                                                    </td>
-                                                    <td>
-                                                        <div className="fin_actions">
-                                                            {/* <button className="action-btn edit" title="Tahrirlash (kelajakda)">
-                                                                <Edit2 size={16} />
-                                                            </button> */}
-                                                            <button
-                                                                onClick={() => handleDelete(trans._id || trans.id)}
-                                                                className="action-btn delete"
-                                                                disabled={isDeleting}
-                                                                title="O'chirish"
-                                                            >
-                                                                {isDeleting ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            ))
                                     )}
                                 </tbody>
                             </table>
@@ -341,6 +567,46 @@ export default function FinancePage({ t }) {
                     </div>
                 </div>
             </div>
+
+            {/* Tranzaksiya detallari modal */}
+            {selectedTransaction && (
+                <div className="modal-overlay" onClick={() => setSelectedTransaction(null)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <h3>Tranzaksiya tafsilotlari</h3>
+                        <div className="detail-grid">
+                            <div><strong>Sana:</strong> {formatUzbekDate(selectedTransaction.date)}</div>
+                            <div><strong>Turi:</strong> {selectedTransaction.type === 'income' ? 'Kirim' : 'Chiqim'}</div>
+                            <div><strong>Kategoriya:</strong> {selectedTransaction.category}</div>
+                            <div><strong>Summa:</strong> {selectedTransaction.amount.toLocaleString("uz-UZ")} so'm</div>
+                            <div><strong>Izoh:</strong> {selectedTransaction.description || '(izoh yoʻq)'}</div>
+
+                            {selectedTransaction.debt && selectedTransaction.debt.amount > 0 && (
+                                <>
+                                    <hr style={{ margin: '16px 0' }} />
+                                    <h4>Qarz ma'lumotlari</h4>
+                                    <div><strong>Qarz turi:</strong> {selectedTransaction.debt.debtType === 'given' ? 'Berilgan qarz' : 'Olingan qarz'}</div>
+                                    <div><strong>Miqdori:</strong> {selectedTransaction.debt.amount.toLocaleString("uz-UZ")} so'm</div>
+                                    <div><strong>F.I.Sh:</strong> {selectedTransaction.debt.fullName}</div>
+                                    {selectedTransaction.debt.phone && <div><strong>Telefon:</strong> {selectedTransaction.debt.phone}</div>}
+                                    {selectedTransaction.debt.dueDate && (
+                                        <div><strong>Qaytarish muddati:</strong> {new Date(selectedTransaction.debt.dueDate).toLocaleDateString('uz-UZ')}</div>
+                                    )}
+                                    <div><strong>Qaytarilganmi:</strong> {selectedTransaction.debt.isReturned ? 'Ha' : 'Yoʻq'}</div>
+                                    {selectedTransaction.debt.returnedAt && (
+                                        <div><strong>Qaytarilgan sana:</strong> {new Date(selectedTransaction.debt.returnedAt).toLocaleDateString('uz-UZ')}</div>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                        <button className="btn-close-modal" onClick={() => setSelectedTransaction(null)}>Yopish</button>
+                    </div>
+                </div>
+            )}
+
+            {/* Popover backdrop */}
+            {deleteConfirmId && (
+                <div className="popover-backdrop" onClick={() => setDeleteConfirmId(null)} />
+            )}
         </div>
     );
 }

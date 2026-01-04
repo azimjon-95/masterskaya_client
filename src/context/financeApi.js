@@ -36,6 +36,24 @@ export const FinanceApi = api.injectEndpoints({
             }),
             invalidatesTags: ["Finance", "Balance"], // delete bo'lganda cache ni tozalaydi
         }),
+
+        // Bizga qarzdorlar (given)
+        getDebtors: builder.query({
+            query: () => "/finance/debtors",
+            providesTags: ["Debt"],
+        }),
+
+        // Telefon bo‘yicha qarzni to‘liq yopish
+        payDebtByPhone: builder.mutation({
+            query: (body) => {
+                return {
+                    url: "/debt/pay",
+                    method: "POST",
+                    body,
+                };
+            },
+            invalidatesTags: ["Finance", "Balance", "Debt"],
+        }),
     }),
 });
 
@@ -45,4 +63,8 @@ export const {
     useGetBalanceQuery,
     useCreateTransactionMutation,
     useDeleteTransactionMutation,
+
+    // debt hooks
+    useGetDebtorsQuery,
+    usePayDebtByPhoneMutation,
 } = FinanceApi;

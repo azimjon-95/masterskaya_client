@@ -8,10 +8,16 @@ import {
 import './style.css';
 
 const Dashboard = () => {
-    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-    const { data: dashboardData, isLoading, refetch } = useGetDashboardQuery(selectedMonth);
     const [refetchDashboard] = useRefetchDashboardMutation();
-    console.log(dashboardData);
+    const getCurrentMonth = () => {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, "0");
+        return `${y}.${m}`;
+    };
+
+    const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
+    const { data: dashboardData, isLoading, refetch } = useGetDashboardQuery(selectedMonth);
 
     // Socket.io real-time yangilanishlar
     useEffect(() => {
@@ -23,20 +29,6 @@ const Dashboard = () => {
         return () => socket.disconnect();
     }, [refetch]);
 
-    const months = [
-        { value: 1, label: 'Yanvar' },
-        { value: 2, label: 'Fevral' },
-        { value: 3, label: 'Mart' },
-        { value: 4, label: 'Aprel' },
-        { value: 5, label: 'May' },
-        { value: 6, label: 'Iyun' },
-        { value: 7, label: 'Iyul' },
-        { value: 8, label: 'Avgust' },
-        { value: 9, label: 'Sentabr' },
-        { value: 10, label: 'Oktabr' },
-        { value: 11, label: 'Noyabr' },
-        { value: 12, label: 'Dekabr' }
-    ];
 
     const formatCurrency = (value) => {
         return new Intl.NumberFormat('uz-UZ').format(value) + ' so\'m';
@@ -78,18 +70,20 @@ const Dashboard = () => {
             {/* Header Section */}
             <div className="dashboard-header-section">
                 <div className="dashboard-header-content">
-                    <h1 className="dashboard-main-title">📊 Statistika</h1>
-                    <select
+                    <h1 className="dashboard-main-title">📊 Monitoring</h1>
+                    <input
                         className="dashboard-month-selector"
-                        value={selectedMonth}
-                        onChange={(e) => setSelectedMonth(Number(e.target.value))}
-                    >
-                        {months.map(month => (
-                            <option key={month.value} value={month.value}>
-                                {month.label}
-                            </option>
-                        ))}
-                    </select>
+                        type="month"
+                        value={selectedMonth.replace(".", "-")}
+                        onChange={(e) => {
+                            const value = e.target.value; // "2026-01"
+                            if (!value) return;
+
+                            const [year, month] = value.split("-");
+                            setSelectedMonth(`${year}.${month}`);
+                        }}
+                    />
+
                 </div>
             </div>
 
@@ -124,6 +118,22 @@ const Dashboard = () => {
                     <div className="dashboard-stat-content">
                         <p className="dashboard-stat-label">Balans</p>
                         <p className="dashboard-stat-value">{formatCurrency(data.balance)}</p>
+                    </div>
+                </div>
+
+                <div className="dashboard-stat-card dashboard-stat-card-given">
+                    <div className="dashboard-stat-icon">💳</div>
+                    <div className="dashboard-stat-content">
+                        <p className="dashboard-stat-label">Berilgan qarz</p>
+                        <p className="dashboard-stat-value">{formatCurrency(data.debts.given)}</p>
+                    </div>
+                </div>
+
+                <div className="dashboard-stat-card dashboard-stat-card-taken">
+                    <div className="dashboard-stat-icon">💳</div>
+                    <div className="dashboard-stat-content">
+                        <p className="dashboard-stat-label">Olingan qarz</p>
+                        <p className="dashboard-stat-value">{formatCurrency(data.debts.taken)}</p>
                     </div>
                 </div>
             </div>

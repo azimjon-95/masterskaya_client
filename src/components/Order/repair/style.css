@@ -1,0 +1,381 @@
+/* Repair Progress Modal - Kreativ Dizayn */
+.modal-overlay_lib {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.repair-progress-modal_lib {
+    max-width: 520px;
+    width: 95%;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(59, 130, 246, 0.2);
+    border: 1px solid #3b82f630;
+    animation: modalPop 0.4s ease-out;
+}
+
+.repair-progress-modal_lib .modal-top_lib {
+    background: linear-gradient(to right, #1e40af, #3b82f6);
+    padding: 10px 24px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.repair-progress-modal_lib .modal-top_lib::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: shine 8s linear infinite;
+}
+
+.repair-progress-modal_lib .modal-top_lib h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.repair-progress-modal_lib .modal-top_lib h2::before {
+    content: '🔧';
+    font-size: 28px;
+    animation: wrenchRotate 4s linear infinite;
+}
+
+.repair-progress-modal_lib .close-btn-modal_lib {
+    background: rgba(255, 255, 255, 0.2);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    color: white;
+    font-size: 18px;
+    backdrop-filter: blur(4px);
+    transition: all 0.3s;
+}
+
+.repair-progress-modal_lib .close-btn-modal_lib:hover {
+    background: rgba(239, 68, 68, 0.4);
+    transform: scale(1.1);
+}
+
+.repair-progress-modal_lib .modal-subtitle_lib {
+    color: #e2e8f0;
+    font-size: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #475569;
+}
+
+.repair-progress-modal_lib .modal-body-content_lib {
+    padding: 8px 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Fake progress bar - vizual qiziqish uchun */
+.progress-container_lib {
+    background: #334155;
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progress-bar_lib {
+    height: 100%;
+    width: 65%;
+    /* o'zgartirib qo'yishingiz mumkin */
+    background: linear-gradient(90deg, #10b981, #34d399);
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar_lib::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: progressShine 2s linear infinite;
+}
+
+/* Input kartochkalari */
+.form-group_modal_lib {
+    background: rgba(30, 41, 59, 0.6);
+    border-radius: 14px;
+    padding: 16px;
+    backdrop-filter: blur(8px);
+    border: 1px solid #47556950;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Tugmalar */
+.repair-progress-modal_lib .modal-actions_lib {
+    padding: 20px 24px;
+    background: #0f172a;
+    border-top: 1px solid #334155;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.repair-progress-modal_lib .cancel-btn_lib {
+    background: #475569;
+    color: #e2e8f0;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.repair-progress-modal_lib .cancel-btn_lib_lib:hover {
+    background: #64748b;
+    transform: translateY(-2px);
+}
+
+/* --- Parts list container --- */
+.form-group_modal_lib {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    /* Har bir part-item orasida bo‘sh joy */
+    margin-top: 15px;
+}
+
+.form-group_main_lib {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-group_main_lib>p {
+    text-wrap: nowrap;
+    font-size: 13px;
+}
+
+/* --- Individual part item --- */
+.part-item_lib {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    transition: box-shadow 0.2s;
+}
+
+.part-item_lib:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Part name text --- */
+.part-item_lib span {
+    flex: 1;
+    /* input va button yoniga moslashadi */
+    font-weight: 500;
+    font-size: 14px;
+    color: #333;
+}
+
+/* --- Input style --- */
+.part-input_lib {
+    width: 80px;
+    padding: 5px 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+.part-input_lib:focus {
+    border-color: #2196F3;
+    box-shadow: 0 0 4px rgba(33, 150, 243, 0.4);
+}
+
+/* --- Add button --- */
+.add-btn_lib {
+    padding: 3px 10px;
+    background-color: #4CAF50;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.add-btn_lib:hover {
+    background-color: #45a049;
+    transform: translateY(-1px);
+}
+
+.add-btn_lib:active {
+    transform: translateY(0);
+}
+
+/* Responsive uchun kichik ekran */
+@media (max-width: 480px) {
+    .part-item_lib {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .part-input_lib {
+        width: 100%;
+    }
+
+    .add-btn_lib {
+        width: 100%;
+    }
+}
+
+.repair-progress-modal_lib .confirm-btn_lib {
+    background: linear-gradient(to right, #3b82f6, #1d4ed8);
+    color: white;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    transition: all 0.3s;
+}
+
+.repair-progress-modal_lib .confirm-btn_lib:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
+}
+
+.repair-progress-modal_lib .confirm-btn_lib:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Animatsiyalar */
+@keyframes modalPop {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes wrenchRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(30deg);
+    }
+
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(30deg);
+    }
+}
+
+@keyframes progressShine {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+
+/* media */
+@media (max-width: 600px) {
+    .repair-progress-modal_lib {
+        width: 100%;
+        border-radius: 0;
+    }
+
+    .modal-body-content_lib {
+        padding: 10px !important;
+    }
+
+    .repair-progress-modal_lib .modal-actions_lib {
+        padding: 10px 20px;
+        background: #0f172a;
+        border-top: 1px solid #334155;
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+    }
+
+    .repair-progress-modal_lib .confirm-btn_lib {
+        background: linear-gradient(to right, #3b82f6, #1d4ed8);
+        color: white;
+        padding: 8px 28px !important;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        transition: all 0.3s;
+    }
+
+    .form-group_modal_lib {
+        background: rgba(30, 41, 59, 0.6);
+        border-radius: 7px;
+        padding: 10px;
+        border: 1px solid #47556950;
+        transition: all 0.3s;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .repair-progress-modal_lib .cancel-btn_lib {
+        background: #475569;
+        color: #e2e8f0;
+        padding: 8px 28px !important;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .repair-progress-modal_lib .modal-top_lib h2 {
+        font-size: 20px;
+    }
+}

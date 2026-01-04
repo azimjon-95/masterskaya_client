@@ -85,8 +85,8 @@
 
 .dashboard-stat-card {
     background: white;
-    border-radius: 16px;
-    padding: 10px;
+    border-radius: 10px;
+    padding: 5px 10px;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -119,8 +119,18 @@
     background: linear-gradient(135deg, #ffffff 0%, #eef2ff 100%);
 }
 
+.dashboard-stat-card-given {
+    border-color: #fdffe0;
+    background: linear-gradient(135deg, #ffffff 0%, #feffee 100%);
+}
+
+.dashboard-stat-card-taken {
+    border-color: #ff9d9d9a;
+    background: linear-gradient(135deg, #ffffff 0%, #ffc2c2 100%);
+}
+
 .dashboard-stat-icon {
-    font-size: 32px;
+    font-size: 29px;
     line-height: 1;
 }
 
@@ -133,11 +143,10 @@
     font-size: 12px;
     color: #6b7280;
     font-weight: 500;
-    margin-bottom: 4px;
 }
 
 .dashboard-stat-value {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     color: #1f2937;
     white-space: nowrap;
@@ -321,29 +330,46 @@
 }
 
 /* Tablet Styles */
-@media screen and (min-width: 640px) {
+@media (max-width: 640px) {
+    .dashboard-month-selector {
+        padding: 3px 8px;
+        border-radius: 8px;
+    }
 
     .dashboard-main-title {
-        font-size: 26px;
+        font-size: 20px;
+    }
+
+    .dashboard-header-section {
+        margin-bottom: 8px;
+    }
+
+    .dashboard-chart-card {
+        padding: 16px;
+        padding-top: 8px;
+        padding-left: 0;
+        padding-bottom: 0;
+        margin-bottom: 8px;
     }
 
     .dashboard-stats-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
+        gap: 5px !important;
+        margin-bottom: 8px;
     }
 
     .dashboard-stat-value {
-        font-size: 18px;
+        font-size: 14px;
     }
 
     .dashboard-chart-title {
-        font-size: 18px;
+        font-size: 16px;
         margin-bottom: 6px !important;
         margin-left: 10px !important;
     }
 
     .dashboard-top-charts-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(1, 1fr);
     }
 }
 
@@ -354,7 +380,7 @@
     }
 
     .dashboard-stat-icon {
-        font-size: 28px;
+        font-size: 25px;
     }
 
     .dashboard-store-icon {

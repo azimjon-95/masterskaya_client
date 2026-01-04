@@ -51,6 +51,13 @@ export const materialsApi = api.injectEndpoints({
             query: (month) => `/port/sales?month=${month}`,
             providesTags: ["Sales"]
         }),
+
+        // 🔹 Barcha detallarni olish
+        getExtiyotParts: builder.query({
+            query: () => "/port/extiyot-parts",
+            providesTags: ["Parts"]
+        }),
+
     }),
 
     overrideExisting: false,
@@ -62,5 +69,6 @@ export const {
     useUpdatePartMutation,
     useDeletePartMutation,
     useSellPartMutation,
-    useGetSalesQuery
+    useGetSalesQuery,
+    useGetExtiyotPartsQuery,
 } = materialsApi;

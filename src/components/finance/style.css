@@ -14,6 +14,27 @@
     /* flex-wrap: wrap; */
 }
 
+/* Shaxsiy pul yechish uchun maxsus badge va qator rangi */
+.type-badge.personal {
+    background-color: #ff8c00 !important;
+    /* To'q sariq */
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+tr.personal-withdrawal {
+    background-color: #fff8e6 !important;
+    /* Och sariq fon */
+    border-left: 4px solid #ff8c00;
+}
+
+tr.personal-withdrawal td {
+    font-weight: 500;
+}
+
 .stat-card_finance {
     flex: 1;
     min-width: 180px;
@@ -85,6 +106,17 @@
     white-space: nowrap;
 }
 
+.transaction-form_box {
+    display: flex;
+    gap: 12px;
+    background: white;
+    border-radius: 10px;
+}
+
+.transaction-form_box>input {
+    width: 100%;
+}
+
 /* Kirim/Chiqim formasi */
 .transaction-form_finance {
     display: flex;
@@ -102,6 +134,15 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 15px;
+}
+
+.transaction-form_finance textarea {
+    padding: 7px 11px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    resize: none;
+
 }
 
 .submit-btn_finance {
@@ -158,10 +199,10 @@
 }
 
 .transactions-table td {
-    padding: 10px 8px;
+    padding: 6px 8px !important;
     border-bottom: 1px solid #eee;
     white-space: nowrap;
-    overflow: hidden;
+    /* overflow: hidden; */
     text-overflow: ellipsis;
     max-width: 120px;
 }
@@ -193,7 +234,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 4px;
+    padding: 4px 4px 2px 4px !important;
 }
 
 .action-btn.edit {
@@ -363,6 +404,129 @@
     width: 100%;
 }
 
+/* ================================== */
+.fin_actions .action-btn.view {
+    color: #2563eb;
+    background: #eff6ff;
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.fin_actions .action-btn.view:hover {
+    background: #dbeafe;
+}
+
+.fin_actions .action-btn.delete {
+    color: #dc2626;
+    background: #fee2e2;
+    padding: 6px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.fin_actions .action-btn.delete:hover {
+    background: #fecaca;
+}
+
+.confirm-popover {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 9000;
+    /* top: 100px; */
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 12px;
+    min-width: 220px;
+    margin-top: 4px;
+}
+
+.popover-content p {
+    margin: 0 0 12px 0;
+    font-size: 0.95rem;
+}
+
+.popover-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.popover-actions button {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: white;
+}
+
+.popover-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background: transparent;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.detail-grid>div {
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.btn-close-modal {
+    margin-top: 20px;
+    padding: 8px 16px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* ================================== */
+
 /* Jadvalni minimal kenglik bilan cheklash */
 .transactions-table {
     width: 100%;
@@ -370,6 +534,7 @@
     /* Mobil uchun scroll paydo bo'lishi uchun */
     border-collapse: collapse;
     font-size: 13px;
+    position: relative;
 }
 
 .transactions-table th {
@@ -388,7 +553,8 @@
     padding: 10px 8px;
     border-bottom: 1px solid #eee;
     white-space: nowrap;
-    overflow: hidden;
+    /* overflow: hidden; */
+    position: relative;
     text-overflow: ellipsis;
     max-width: 150px;
 }

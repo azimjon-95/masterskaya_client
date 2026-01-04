@@ -89,7 +89,17 @@ export const orderApi = api.injectEndpoints({
     getWaitingOrders: builder.query({
       query: () => "/waiting-orders",
       providesTags: ["Orders"],
-    })
+    }),
+
+    // post("/add-used-part",
+    addUsedPart: builder.mutation({
+      query: (body) => ({
+        url: "/add-used-part",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Orders"]
+    }),
   }),
   overrideExisting: false,
 });
@@ -102,5 +112,6 @@ export const {
   useDeleteOrderMutation,
   useUpdateStatusMutation,
   useUpdateWaitingMutation,
-  useGetWaitingOrdersQuery
+  useGetWaitingOrdersQuery,
+  useAddUsedPartMutation,
 } = orderApi;

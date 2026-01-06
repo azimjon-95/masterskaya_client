@@ -15,6 +15,8 @@ import {
 import { useGetOrdersQuery } from '../context/orderApi';
 import './style/DashboardPage.css'
 import FinancePage from '../components/finance/Finance';
+import AdminDashboard from '../components/admin/AdminDashboard';
+import Eslatma from '../components/notes/Notes';
 
 export default function DashboardPage({ username, lang, setLang, onLogout }) {
     const [showAddOrder, setShowAddOrder] = useState(false);
@@ -81,7 +83,7 @@ export default function DashboardPage({ username, lang, setLang, onLogout }) {
     // localStorage dan oxirgi tanlangan sahifani o'qish
     useEffect(() => {
         const savedPage = localStorage.getItem('activePage');
-        if (savedPage && ['home', 'finance', 'users', 'warehouse', 'diagnostic', "dashboard"].includes(savedPage)) {
+        if (savedPage && ['home', 'finance', 'users', 'warehouse', 'diagnostic', "dashboard", "admin", "nots"].includes(savedPage)) {
             setCurrentPage(savedPage);
         } else {
             // Agar yo'q bo'lsa yoki noto'g'ri bo'lsa — home qilamiz
@@ -219,6 +221,12 @@ export default function DashboardPage({ username, lang, setLang, onLogout }) {
                 )}
                 {currentPage === 'dashboard' && (
                     <Dashboard />
+                )}
+                {currentPage === 'admin' && (
+                    <AdminDashboard />
+                )}
+                {currentPage === 'nots' && (
+                    <Eslatma />
                 )}
             </main>
             {waitingOrdersList?.length > 0 &&

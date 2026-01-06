@@ -20,6 +20,15 @@ export const adminApi = api.injectEndpoints({
             providesTags: ["Admins"],
         }),
 
+        updateUser: builder.mutation({
+            query: ({ id, ...updatedData }) => ({
+                url: `/users/${id}`,
+                method: "PUT",
+                body: updatedData,
+            }),
+            invalidatesTags: ["Admins"],
+        }),
+
         createUser: builder.mutation({
             query: (newUser) => ({
                 url: "/users",
@@ -36,6 +45,12 @@ export const adminApi = api.injectEndpoints({
             }),
             invalidatesTags: ["Admins"],
         }),
+
+        //router.get("/users/:id/full-details",
+        getUserFullDetails: builder.query({
+            query: (id) => `/users/${id}/full-details`,
+            providesTags: ["Admins"],
+        }),
     }),
     overrideExisting: false,
 });
@@ -45,5 +60,7 @@ export const {
     useGetAllUsersQuery,
     useGetUserByIdQuery,
     useCreateUserMutation,
+    useUpdateUserMutation,
     useDeleteUserMutation,
+    useGetUserFullDetailsQuery,
 } = adminApi;

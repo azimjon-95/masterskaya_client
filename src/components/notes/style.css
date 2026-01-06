@@ -1,0 +1,706 @@
+.zam_app {
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    position: relative;
+}
+
+.zam_header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.zam_header_actions {
+    position: relative;
+}
+
+.zam_note_actions {
+    position: relative;
+}
+
+.zam_popover {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.591);
+    z-index: 100;
+    min-width: 170px;
+    overflow: hidden;
+    animation: fadeIn 0.2s ease;
+}
+
+.zam_header_popover {
+    top: 30px;
+    right: 0;
+}
+
+.zam_header_popover button {
+    color: #333 !important;
+    text-wrap: nowrap;
+}
+
+.note_popover {
+    top: 25px;
+    right: -9px;
+}
+
+.zam_popover_item {
+    width: 100%;
+    padding: 8px 16px;
+    text-align: left;
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.zam_popover_item:hover {
+    background: #f0f0f0;
+}
+
+.zam_popover_item.danger {
+    color: #e74c3c;
+}
+
+.zam_popover_item.danger:hover {
+    background: #ffeaea;
+}
+
+.pinned_icon.active {
+    color: #f39c12;
+    transform: rotate(45deg);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.zam_header_actions>button {
+    color: white !important;
+    font-size: 20px !important;
+}
+
+.zam_menu_btn,
+.zam_more_btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.zam_menu_icon {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 24px;
+}
+
+.zam_menu_icon span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: white;
+    border-radius: 2px;
+}
+
+.zam_logo {
+    font-size: 20px;
+    font-weight: 500;
+    flex: 1;
+    /* margin-left: 16px; */
+}
+
+.zam_more_btn span {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.zam_main {
+    padding: 16px 0;
+    padding-bottom: 80px;
+}
+
+.zam_notes_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+@media (max-width: 640px) {
+    .zam_notes_grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 12px;
+    }
+}
+
+.zam_note_card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    grid-row-end: span var(--row-span, 10);
+    /* Default: taxminan 200px */
+}
+
+.zam_note_card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.zam_note_description {
+    font-size: 13px;
+    color: #666;
+    margin: 4px 8px;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.zam_note_footer {
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+    padding-top: 6px;
+    border-top: 1px solid #eee;
+}
+
+.zam_reminder_bell {
+    font-size: 11px;
+    color: #4CAF50;
+    font-weight: 500;
+    text-wrap: nowrap;
+}
+
+.zam_reminder_section {
+    margin: 16px 0;
+    padding: 12px;
+    background: #f8fff8;
+    border-radius: 8px;
+    border: 1px solid #e0f0e0;
+}
+
+.zam_reminder_section label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.zam_reminder_inputs {
+    display: flex;
+    gap: 12px;
+}
+
+.zam_type_selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.zam_type_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px;
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.zam_deadline,
+.zam_goal,
+.zam_idea,
+.zam_location {
+    padding: 12px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    margin: 8px 0;
+    font-size: 15px;
+}
+
+.zam_deadline {
+    border-left: 4px solid #e74c3c;
+}
+
+.zam_goal {
+    border-left: 4px solid #3498db;
+}
+
+.zam_idea {
+    border-left: 4px solid #f39c12;
+}
+
+.zam_location {
+    border-left: 4px solid #9b59b6;
+}
+
+.zam_link {
+    color: #4CAF50;
+    word-break: break-all;
+    font-size: 14px;
+}
+
+.check {
+    margin-right: 8px;
+    color: #666;
+}
+
+.zam_deadline_desc {
+    margin: 8px 0 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.zam_type_selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+    gap: 12px;
+    margin: 24px 0;
+}
+
+.zam_type_btn {
+    /* flex-direction: column; */
+    padding: 16px 8px;
+    font-size: 13.5px;
+}
+
+.zam_type_icon {
+    font-size: 28px;
+    margin-bottom: 6px;
+}
+
+@media (max-width: 480px) {
+    .zam_type_selector {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin: 10px 0;
+    }
+
+    .zam_type_btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 2px 6px;
+        background: #f8f9fa;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #555;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+}
+
+
+.zam_type_btn:hover {
+    background: #f0f0f0;
+    border-color: #4CAF50;
+    transform: translateY(-2px);
+}
+
+.zam_type_btn.active {
+    background: #e8f5e8;
+    border-color: #4CAF50;
+    color: #2e7d32;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.15);
+}
+
+.zam_type_icon {
+    font-size: 20px;
+}
+
+.zam_reminder_inputs input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+/* Rasmli cardlar uchun alohida */
+.zam_note_card.has-image {
+    padding: 0;
+    overflow: hidden;
+    grid-row-end: span 35;
+    /* Taxminan 350px — rasmli cardlar kattaroq */
+}
+
+.zam_note_card.tall {
+    grid-row-end: span 28;
+    /* Amount cardlari uzunroq */
+}
+
+.zam_note_card.short {
+    grid-row-end: span 15;
+    /* Qisqa matnli cardlar */
+}
+
+.zam_note_card.medium {
+    grid-row-end: span 22;
+    /* O'rtacha */
+}
+
+.zam_note_card.long {
+    grid-row-end: span 32;
+    /* Uzun ro'yxat yoki matn */
+}
+
+.zam_note_title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.zam_content {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    flex: 1;
+}
+
+.zam_content div {
+    margin-bottom: 4px;
+}
+
+.zam_amount {
+    font-size: 24px;
+    font-weight: 500;
+    color: #4CAF50;
+    margin-bottom: 12px;
+}
+
+.zam_list {
+    list-style: none;
+    padding: 0;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 12px;
+    flex: 1;
+}
+
+.zam_list li {
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+.zam_note_date {
+    font-size: 11px;
+    color: #999;
+    margin-top: auto;
+    text-wrap: nowrap;
+}
+
+.actions_nots_menu {
+
+    gap: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.zam_note_box {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.zam_action_button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 16px;
+}
+
+.zam_action_button:hover {
+    color: #4CAF50;
+}
+
+.pinned_icon {
+    font-size: 16px;
+    color: #4CAF50
+}
+
+.zam_fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 300;
+    transition: all 0.2s ease;
+    z-index: 50;
+}
+
+.zam_fab:hover {
+    background-color: #45a049;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+}
+
+.zam_fab:active {
+    transform: scale(0.95);
+}
+
+/* Yangi qo'shilgan stillar */
+.zam_note_card.has-image {
+    padding: 0;
+    overflow: hidden;
+}
+
+.zam_note_card.has-image>.zam_note_box {
+    padding: 12px;
+}
+
+.zam_note_card.has-image .zam_note_title {
+    font-size: 14px;
+    z-index: 2;
+}
+
+.zam_note_card.has-image .zam_note_date {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    z-index: 2;
+}
+
+.zam_note_image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.zam_note_card.tall {
+    grid-row: span 2;
+}
+
+/* Modal styles */
+.zam_modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.zam_modal {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.zam_modal h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+.zam_input,
+.zam_textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 16px;
+    font-family: inherit;
+}
+
+.zam_textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.zam_list_input {
+    margin-bottom: 16px;
+}
+
+.zam_list_add {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.zam_list_add input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.zam_list_add button {
+    padding: 0 16px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.zam_preview_list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.zam_preview_list li {
+    padding: 8px 12px;
+    background: #f0f0f0;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.zam_preview_list li span {
+    cursor: pointer;
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.zam_image_upload {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.zam_image_preview {
+    max-width: 100%;
+    max-height: 300px;
+    margin-top: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.zam_modal_buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.zam_modal_buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.zam_modal_buttons button:first-child {
+    background: #eee;
+    color: #333;
+}
+
+.zam_save_btn {
+    background: #4CAF50 !important;
+    color: white !important;
+}
+
+@media (max-width: 640px) {
+    .zam_main {
+        padding: 12px 0;
+    }
+
+    .zam_note_card {
+        padding: 12px;
+        min-height: 100px;
+    }
+
+    .zam_note_title {
+        font-size: 14px;
+    }
+
+    .zam_content,
+    .zam_list {
+        font-size: 13px;
+    }
+
+    .zam_fab {
+        width: 48px;
+        height: 48px;
+        bottom: 16px;
+        right: 16px;
+        font-size: 28px;
+    }
+
+    .zam_modal {
+        background: white;
+        border-radius: 12px;
+        padding: 16px;
+        width: 100%;
+        max-width: 500px;
+        max-height: 100vh;
+        overflow-y: auto;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+}

@@ -70,7 +70,8 @@ export default function Header({ t, username, onLogout, lang, setLang, onNavigat
                                 </button>
                         }
                         <button onClick={toggleSidebar} className="user-btn">
-                            <BsPersonCircle size={28} />
+
+                            {user?.image ? <img src={user?.image} className="avatarInHeader" alt="" /> : <BsPersonCircle size={39} />}
                         </button>
                     </span>
                 </div>
@@ -85,22 +86,16 @@ export default function Header({ t, username, onLogout, lang, setLang, onNavigat
                     </button>
                 </div>
 
-                <div className="user-info">
+                <div className="user-info" onClick={() => handleMenuClick('admin')}>
                     <div className="avatar-placeholder">
-                        <BsPersonCircle size={80} />
+                        <img src={user?.image} alt="" />
                     </div>
-                    <h4>{user?.FullName}</h4>
-                    <p>{user?.PhoneNumber}</p>
+                    <h4>{user?.fullName}</h4>
+                    <p>{user?.phoneNumber}</p>
                 </div>
 
                 <nav className="sidebar-menu">
                     <ul>
-                        <li
-                            className={`menu-item ${activeMenu === 'dashboard' ? 'active' : ''}`}
-                            onClick={() => handleMenuClick('dashboard')}
-                        >
-                            <span>Manitoring</span>
-                        </li>
                         <li
                             className={`menu-item ${activeMenu === 'home' ? 'active' : ''}`}
                             onClick={() => handleMenuClick('home')}
@@ -108,10 +103,22 @@ export default function Header({ t, username, onLogout, lang, setLang, onNavigat
                             <span>Asosiy Sahifa</span>
                         </li>
                         <li
+                            className={`menu-item ${activeMenu === 'dashboard' ? 'active' : ''}`}
+                            onClick={() => handleMenuClick('dashboard')}
+                        >
+                            <span>Manitoring</span>
+                        </li>
+                        <li
                             className={`menu-item ${activeMenu === 'finance' ? 'active' : ''}`}
                             onClick={() => handleMenuClick('finance')}
                         >
                             <span>Moliya bo'limi</span>
+                        </li>
+                        <li
+                            className={`menu-item ${activeMenu === 'nots' ? 'active' : ''}`}
+                            onClick={() => handleMenuClick('nots')}
+                        >
+                            <span>Eslatmalar</span>
                         </li>
                         <li
                             className={`menu-item ${activeMenu === 'warehouse' ? 'active' : ''}`}

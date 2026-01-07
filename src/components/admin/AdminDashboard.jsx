@@ -5,6 +5,7 @@ import { useNotification } from "../../components/Notification/NotificationToast
 import {
     useCreateUserMutation,
     useUpdateUserMutation,
+    useDeleteUserMutation
 } from "../../context/adminApi";
 import { useGetUserFullDetailsQuery } from "../../context/adminApi";
 import "./style.css";
@@ -14,7 +15,8 @@ export default function AdminDashboard() {
     const [selectedUser, setSelectedUser] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const user = JSON.parse(localStorage.getItem("user"));
-    const { data, isLoading } = useGetUserFullDetailsQuery(user?._id);
+    const { data, isLoading, refetch } = useGetUserFullDetailsQuery(user?.id);
+    const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
     const notify = useNotification();
 
@@ -57,6 +59,19 @@ export default function AdminDashboard() {
         password: "",
         role: "master",
     });
+
+    const deleteMaster = async (id) => {
+        try {
+            // DELETE
+            await deleteUser(id);
+            refetch();
+            setUsers((prev) => prev.filter((u) => u.id !== id));
+            notify("Master muvaffaqiyatli o‘chirildi ✅", "success");
+        } catch (err) {
+            console.error(err);
+            notify(err?.data?.message || "Xatolik yuz berdi", "error");
+        }
+    }
 
     // Rasm fayli va preview
     const [imageFile, setImageFile] = useState(null); // File obyekti (serverga yuboriladi)
@@ -238,7 +253,7 @@ export default function AdminDashboard() {
                         <div className="history">
                             <div className="menu-admin">
                                 <button onClick={() => setMenu("profile")}>Profil</button>
-                                <button onClick={() => setMenu("finance")}>Moliya</button>
+                                {/* <button onClick={() => setMenu("finance")}>Moliya</button> */}
                                 {
                                     user.role === "admin" && <button onClick={() => setMenu("create")}>+ Yaratish</button>
                                 }
@@ -247,16 +262,23 @@ export default function AdminDashboard() {
                             {/* PROFIL BO'LIMI */}
                             {menu === "profile" && (
                                 <div className="orders">
-                                    <h3>Ishlar tarixi</h3>
-                                    {orders.length === 0 ? (
+                                    <h3>Ishchilar</h3>
+                                    {data?.innerData?.master?.length === 0 ? (
                                         <p className="no-data">Ish yo‘q</p>
                                     ) : (
-                                        orders.map((order) => (
-                                            <div key={order._id} className="order-item">
-                                                <span>
-                                                    {order.brand} {order.phoneModel}
-                                                </span>
-                                                <span>{order.TotalCost.toLocaleString()} so'm</span>
+                                        data?.innerData?.master?.map((order, inx) => (
+                                            <div key={inx} className="order-item">
+                                                <div className="order-info">
+                                                    <div className="order-img">
+                                                        <img src={order?.image} alt="" />
+                                                    </div>
+                                                    <span>
+                                                        {order?.fullName} {order.phoneModel}
+                                                    </span>
+                                                </div>
+                                                <span>{order.role}</span>
+                                                <span>{order.phoneNumber}</span>
+                                                <button disabled={isDeleting} onClick={() => deleteMaster(order._id)}>🗑</button>
                                             </div>
                                         ))
                                     )}
@@ -394,9 +416,9 @@ export default function AdminDashboard() {
                                 </div>
                             )}
 
-                            <p className="total">
+                            {/* <p className="total">
                                 Jami daromad: {totalIncome.toLocaleString()} so'm
-                            </p>
+                            </p> */}
                         </div>
                     </div>
                 ) : (

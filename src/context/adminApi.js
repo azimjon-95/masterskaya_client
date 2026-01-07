@@ -48,7 +48,10 @@ export const adminApi = api.injectEndpoints({
 
         //router.get("/users/:id/full-details",
         getUserFullDetails: builder.query({
-            query: (id) => `/users/${id}/full-details`,
+            query: (id) => (console.log(id), {
+                url: `/users/${id}/full-details`,
+                method: "GET",
+            }),
             providesTags: ["Admins"],
         }),
     }),
